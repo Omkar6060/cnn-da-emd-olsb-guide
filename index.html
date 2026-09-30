@@ -161,6 +161,40 @@ details[open] summary{margin-bottom:8px}
 .split{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:18px;align-items:start}
 .mini{width:100%;image-rendering:pixelated;border-radius:10px;border:1px solid var(--line);aspect-ratio:1/1}
 .countrow{display:flex;gap:18px;flex-wrap:wrap;font-size:.95rem;margin-top:10px}
+.life{background:var(--surface);border:1px dashed var(--g);border-radius:14px;padding:16px 20px 16px 62px;margin:22px 0;position:relative}
+.life::before{content:"";position:absolute;left:20px;top:20px;width:26px;height:26px;border-radius:50%;background:var(--g-soft);box-shadow:inset 0 0 0 6px var(--g)}
+.life h4{margin:0 0 4px;font-family:var(--display);font-weight:500;font-size:1.05rem}
+.life p{margin:.35em 0}
+.film{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 0 var(--slab);margin:24px 0 30px;overflow:hidden}
+.film-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px 0;font-family:var(--display);font-weight:500}
+.film-head span{font-family:var(--body);font-weight:400;font-size:.85rem;color:var(--muted)}
+.film-stage{padding:8px 12px 0}
+.film-stage svg{display:block;width:100%;height:auto;max-height:340px}
+.film-cap{margin:4px 16px 0;min-height:3.2em;font-size:1.02rem}
+.film-bar{display:flex;align-items:center;gap:10px;padding:10px 16px 14px}
+.film-bar button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:7px 12px;font:700 .9rem var(--body);cursor:pointer}
+.fdots{display:flex;gap:6px;flex:1;justify-content:center}
+.fdots button{width:20px;height:8px;padding:0;border-radius:4px;border:0;background:var(--sunk);cursor:pointer}
+.fdots button[aria-current="true"]{background:var(--amber)}
+.f-up{fill:var(--upper)}.f-lo{fill:var(--amber)}.f-sur{fill:var(--surface);stroke:var(--line)}.f-sunk{fill:var(--sunk)}.f-g{fill:var(--g)}.f-gs{fill:var(--g-soft)}.f-b{fill:var(--b)}.f-bad{fill:var(--danger)}.f-ink{fill:var(--ink)}
+.tx{fill:var(--ink);font-family:var(--body)}.tw{fill:#fff;font-family:var(--body);font-weight:700}.tm{fill:var(--muted);font-family:var(--body)}.td{fill:#2A1C02;font-family:var(--body);font-weight:700}.tbad{fill:var(--danger);font-family:var(--body);font-weight:700}.tok{fill:var(--ok);font-family:var(--body);font-weight:700}
+.mono{font-family:var(--mono)}
+.ln{stroke:var(--muted);stroke-width:1.6;fill:none}
+.a{opacity:0;animation:fpop .55s cubic-bezier(.2,.8,.3,1.2) forwards;animation-delay:var(--d,0s);transform-box:fill-box;transform-origin:center}
+.a.fade{animation-name:ffade}.a.slide{animation-name:fslide}.a.drop{animation-name:fdrop}.a.slidel{animation-name:fslidel}
+@keyframes fpop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:none}}
+@keyframes ffade{from{opacity:0}to{opacity:1}}
+@keyframes fslide{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+@keyframes fslidel{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:none}}
+@keyframes fdrop{from{opacity:0;transform:translateY(-34px)}to{opacity:1;transform:none}}
+.watch{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:16px 0 26px}
+.vid{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:0 4px 0 var(--slab)}
+.vid:hover{border-color:var(--b)}
+.vid .play{flex:none;width:40px;height:40px;border-radius:50%;background:var(--danger);position:relative}
+.vid .play::after{content:"";position:absolute;left:16px;top:12px;border-left:12px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent}
+.vid b{display:block;font-size:.98rem;line-height:1.3}
+.vid small{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.a{opacity:1!important;animation:none!important}}
 .nogl{display:none;padding:30px;text-align:center;color:var(--muted)}
 
 @media (max-width:900px){
@@ -226,6 +260,8 @@ details[open] summary{margin-bottom:8px}
     <div class="slab flat"><strong>Play with every widget.</strong> The calculators run the same logic as the Python code in chapter 10.</div>
     <div class="slab flat"><strong>Tick chapters off.</strong> Your progress stays in this browser, so you can pick up where you left off.</div>
   </div>
+  <h3>Reference videos worth watching</h3><div class="watch"><a class="vid" href="https://www.youtube.com/watch?v=TWEXCYQKyDc" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Secrets Hidden in Images (Steganography)</b><small>Computerphile · 13 min</small></span></a><a class="vid" href="https://www.youtube.com/watch?v=uihBwtPIBxM" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Finding the Edges (Sobel Operator)</b><small>Computerphile · 8 min</small></span></a><a class="vid" href="https://www.youtube.com/watch?v=KuXjwB4LzSA" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>But what is a convolution?</b><small>3Blue1Brown · 23 min</small></span></a><a class="vid" href="https://www.youtube.com/results?search_query=3Blue1Brown+But+what+is+a+neural+network" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>But what is a neural network? (series)</b><small>3Blue1Brown · search on YouTube</small></span></a><a class="vid" href="https://www.youtube.com/watch?v=O4xNJsjtN6E" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>AES Explained (Advanced Encryption Standard)</b><small>Computerphile · 14 min</small></span></a><a class="vid" href="https://www.youtube.com/results?search_query=Computerphile+AES+GCM+Galois+Counter+Mode" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>AES GCM (Galois Counter Mode)</b><small>Computerphile · search on YouTube</small></span></a></div>
+<p class="hint">Videos open on YouTube. Every chapter also has its own short animated explainer you can pause and replay.</p>
   <p class="hint">Based on the 1st-evaluation project report, B.Tech CSE 7th semester, Parala Maharaja Engineering College, Berhampur, session 2026–27.</p>
 </section>
 
@@ -241,7 +277,9 @@ details[open] summary{margin-bottom:8px}
   </table></div>
   <p>This project does all three at once. It encrypts the secret, hides it in an RGB image, and makes sure the original image can be rebuilt with zero pixel differences.</p>
 
-  <h3>Why "give the photo back" matters</h3>
+  <div class="film" data-film="idea" aria-label="Animated explainer: the disappearing ink"></div>
+<aside class="life"><h4>In everyday life: a pencil note in a library book</h4><p>You borrow a library book and write a pencil note in the margin for your friend, who borrows it next. The librarian flips through and sees nothing unusual. That's steganography.</p><p>Your friend reads the note, then rubs it out so completely that nobody could tell it was ever there. The book goes back exactly as it was. That's reversible data hiding. Now imagine the note is also written in a code only your friend knows. That's the encryption layer.</p></aside>
+<h3>Why "give the photo back" matters</h3>
   <p>In medical scans, military imagery, satellite data or court evidence, even a one-value change to a pixel can be unacceptable. RDH lets you attach hidden information, such as a patient ID or an authentication tag, and later remove it without a trace.</p>
 
   <h3>The words in the project name</h3>
@@ -253,13 +291,16 @@ details[open] summary{margin-bottom:8px}
     <tr><td>OLSB</td><td>Overwrite the lowest 3 bits of a pixel with data. Used in busy areas.</td><td>6</td></tr>
     <tr><td>Adaptive</td><td>The choice between EMD and OLSB is made per pixel.</td><td>4</td></tr>
   </table></div>
-  <div class="note"><p><strong>Remember one sentence:</strong> decide where to hide using bits you never change, and pack a record of every bit you did change inside the image itself.</p></div>
+  <h3>Watch next</h3><div class="watch"><a class="vid" href="https://www.youtube.com/watch?v=TWEXCYQKyDc" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Secrets Hidden in Images (Steganography)</b><small>Computerphile · 13 min</small></span></a></div>
+<div class="note"><p><strong>Remember one sentence:</strong> decide where to hide using bits you never change, and pack a record of every bit you did change inside the image itself.</p></div>
 </section>
 
 <!-- 2 BITS -->
 <section class="page" id="bits" data-title="Pixels and bits">
   <h2>Pixels and bits</h2>
   <p class="lede">Every colour pixel is three numbers, Red, Green and Blue, each from 0 to 255. Each number is 8 bits.</p>
+<div class="film" data-film="bits" aria-label="Animated explainer: upper and lower bits"></div>
+
   <div class="slab">
     <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
       <div class="swatch" id="swatch"></div>
@@ -284,7 +325,8 @@ details[open] summary{margin-bottom:8px}
   <p><code>0xF8</code> is <code>11111000</code> in binary. The <code>&amp;</code> (AND) keeps a bit only where both numbers have a 1. So <code>x &amp; 0xF8</code> keeps the top five bits and zeroes the bottom three. The report calls this the <strong>upper-bitplane representation</strong>, <code>Iu = I &amp; 0xF8</code>.</p>
   <p>Changing only the lower three bits moves a value by at most 7, which is about 3% of the 0–255 range. That's why the lower bits are where data goes.</p>
 
-  <h3>Bitplanes</h3>
+  <aside class="life"><h4>In everyday life: your wallet</h4><p>Say you have ₹173. The big notes (₹100, ₹50, ₹20) are like the upper bits: they decide how rich you look. The loose coins (₹1, ₹2) are like the lower bits.</p><p>If a friend quietly swaps your ₹3 in coins for ₹1, you still look like you have about ₹170. Nobody glancing at your wallet notices. That's why data hides in the lower bits: the "big notes" of every pixel stay exactly the same.</p></aside>
+<h3>Bitplanes</h3>
   <p>Take bit number 7 of every pixel and you get a black-and-white picture: bitplane 7. Do this for each bit and you get 8 slabs, exactly the stack on the home page. High bitplanes look like the image. Low bitplanes look like noise.</p>
   <div class="note"><p><strong>Key fact for later:</strong> if embedding only ever touches the lower 3 bits, the upper 5 bits of the stego image equal those of the cover. The receiver can recompute anything that depends only on the upper bits and get the identical answer.</p></div>
 </section>
@@ -293,6 +335,8 @@ details[open] summary{margin-bottom:8px}
 <section class="page" id="pipeline" data-title="The whole pipeline">
   <h2>The whole pipeline</h2>
   <p class="lede">Two journeys: the sender embeds, the receiver extracts and restores. Tap a step to open it.</p>
+<div class="film" data-film="pipeline" aria-label="Animated explainer: the whole journey"></div>
+
   <div class="tracks">
     <div class="track">
       <h3>Sender (embed)</h3>
@@ -316,7 +360,8 @@ details[open] summary{margin-bottom:8px}
       <button class="step an" aria-expanded="false"><strong>7. Write the original low bits back</strong><span class="who">cover restored exactly</span><span class="more">Compare arrays: 0 differences means 100% recovery.</span></button>
     </div>
   </div>
-  <div class="note"><p><strong>The design principle:</strong> decision information (upper bits) is kept separate from recovery information (the saved low bits). That separation is what lets one image carry everything.</p></div>
+  <aside class="life"><h4>In everyday life: a courier parcel with a packing slip</h4><p>You send a phone to a repair shop inside its original box. Inside, you tuck a slip that lists exactly what was in the box before you packed it (charger, cable, SIM tool) and a sealed envelope with your unlock code.</p><p>The shop follows the same rules you did to open the box, reads the slip, and when returning it, puts everything back exactly as listed. One parcel carries the item, the secret, and the instructions to undo everything. No second parcel needed.</p></aside>
+<div class="note"><p><strong>The design principle:</strong> decision information (upper bits) is kept separate from recovery information (the saved low bits). That separation is what lets one image carry everything.</p></div>
 </section>
 
 <!-- 4 DISTORTION -->
@@ -324,7 +369,8 @@ details[open] summary{margin-bottom:8px}
   <h2>The distortion map</h2>
   <p class="lede">Where can we change pixels without anyone noticing? In busy, textured areas. On a smooth sky, changes stand out.</p>
 
-  <h3>Two ways to measure "busy"</h3>
+  <aside class="life"><h4>In everyday life: hiding a crumb</h4><p>Drop a crumb on a plain white tile floor and everyone sees it. Drop the same crumb on a busy patterned carpet and it disappears. Images work the same way: a change on a smooth blue sky shows, while the same change in grass or hair is invisible.</p><p>The distortion map is simply a "carpet or tile?" score for every pixel.</p></aside>
+<h3>Two ways to measure "busy"</h3>
   <p><strong>Analytical map.</strong> The Sobel operator measures how sharply brightness changes between neighbours (edges). Local variance measures how much the values in a 3×3 window spread out (texture). Both are normalised to 0–1 and averaged.</p>
   <p><strong>DistortionCNN.</strong> A small neural network with three branches that look at the image at different scales. It learns patterns the simple formulas miss and outputs a sensitivity map for each of R, G and B.</p>
   <p><strong>Fusion.</strong> The two are blended: <code>D = γ·D_CNN + (1 − γ)·D_analytical</code> with <code>γ = 0.6</code>. Both inputs are computed from the upper bits only.</p>
@@ -354,14 +400,16 @@ details[open] summary{margin-bottom:8px}
     <p class="hint">Green classes go to EMD (Red–Green pairs). Blue goes to OLSB (Blue channel). Drag to rotate.</p>
   </div>
 
-  <h3>The three classes</h3>
+  <h3>Watch next</h3><div class="watch"><a class="vid" href="https://www.youtube.com/watch?v=uihBwtPIBxM" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Finding the Edges (Sobel Operator)</b><small>Computerphile · 8 min</small></span></a><a class="vid" href="https://www.youtube.com/watch?v=KuXjwB4LzSA" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>But what is a convolution?</b><small>3Blue1Brown · 23 min</small></span></a><a class="vid" href="https://www.youtube.com/results?search_query=3Blue1Brown+But+what+is+a+neural+network" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>But what is a neural network? (series)</b><small>3Blue1Brown · search on YouTube</small></span></a></div>
+<h3>The three classes</h3>
   <div class="tablewrap"><table>
     <tr><th>Class</th><th>Rule</th><th>Area</th><th>Method</th></tr>
     <tr><td>0</td><td>D &lt; t1</td><td>Smooth</td><td>EMD mod-5 on R–G</td></tr>
     <tr><td>1</td><td>t1 ≤ D &lt; t2</td><td>Moderate texture</td><td>EMD mod-5 on R–G</td></tr>
     <tr><td>2</td><td>D ≥ t2</td><td>High texture</td><td>3-bit OLSB on Blue</td></tr>
   </table></div>
-  <div class="note warn"><p><strong>Determinism trap.</strong> The receiver must compute the exact same map. Tiny floating-point differences (GPU vs CPU, different library versions) can push a pixel across t1 or t2 and break extraction. Run the CNN on CPU in <code>eval()</code> mode, fix the seeds, and round scores to a fixed step (the starter code rounds to 1/1024) before comparing with thresholds.</p></div>
+  <aside class="life"><h4>In everyday life: two cooks, one recipe</h4><p>If two cooks follow the same recipe with the same ingredients, they should get the same dish. If one uses a slightly different spoon, the taste shifts. Sender and receiver are the two cooks. The upper bits are the ingredients and the code is the recipe. Any difference in "spoons" (GPU vs CPU, library versions) can change the result.</p></aside>
+<div class="note warn"><p><strong>Determinism trap.</strong> The receiver must compute the exact same map. Tiny floating-point differences (GPU vs CPU, different library versions) can push a pixel across t1 or t2 and break extraction. Run the CNN on CPU in <code>eval()</code> mode, fix the seeds, and round scores to a fixed step (the starter code rounds to 1/1024) before comparing with thresholds.</p></div>
 </section>
 
 <!-- 5 EMD -->
@@ -378,6 +426,9 @@ details[open] summary{margin-bottom:8px}
     <tr><td>4</td><td>p1 − 1</td><td>f goes down by 1, which is +4 in mod 5</td></tr>
   </table></div>
   <p>Every digit is reachable by changing one value by 1. Reading it back is simply computing <code>f</code> again.</p>
+<div class="film" data-film="emd" aria-label="Animated explainer: hiding the digit 1"></div>
+<aside class="life"><h4>In everyday life: a 5-day school timetable</h4><p>Suppose your timetable repeats every 5 days: day 0 to day 4. Whatever the date, "which timetable day is it?" is always the date mod 5. To land on timetable day 1, you never need to wait more than a day or two, forward or back.</p><p>EMD does the same with pixels. The pair (p1, p2) points to a "day" from 0 to 4, and a nudge of 1 in the right direction always reaches the day you want.</p></aside>
+
 
   <div class="slab">
     <h3 style="margin-top:0">Try it</h3>
@@ -402,6 +453,8 @@ details[open] summary{margin-bottom:8px}
 <section class="page" id="olsb" data-title="3-bit OLSB">
   <h2>3-bit OLSB</h2>
   <p class="lede">In busy areas, simply overwrite the lowest 3 bits of the Blue value with 3 data bits.</p>
+<div class="film" data-film="olsb" aria-label="Animated explainer: overwriting three bits"></div>
+
   <div class="slab">
     <label class="hint">Blue value <input type="range" id="olsbVal" min="0" max="255" value="150"></label>
     <p class="hint" style="margin:12px 0 4px">Data bits to hide (tap to flip)</p>
@@ -413,7 +466,8 @@ details[open] summary{margin-bottom:8px}
     </div>
     <p class="hint">Formula: <code>new = (b &amp; 0xF8) | data</code>. Extract with <code>new &amp; 7</code>.</p>
   </div>
-  <p>The change is at most 7, and it's in the channel people perceive least strongly, in areas that are already noisy. It carries 3 full bits per pixel, more than EMD's 2.32 bits per pair.</p>
+  <aside class="life"><h4>In everyday life: the paise on a bill</h4><p>A shop bill of ₹1,047 and one of ₹1,040 feel the same when you glance at them. The last digit is detail nobody notices. OLSB rewrites that last "digit" of a pixel, and only in busy areas where there's already lots of detail to hide in.</p></aside>
+<p>The change is at most 7, and it's in the channel people perceive least strongly, in areas that are already noisy. It carries 3 full bits per pixel, more than EMD's 2.32 bits per pair.</p>
   <div class="note"><p><strong>About the "optimal" in OLSB.</strong> Classic optimal LSB adds or subtracts 8 after replacement to bring the value closer to the original. Here that's not allowed, because ±8 changes an upper bit. So this project's OLSB is plain 3-bit replacement, restricted to textured pixels. Say this clearly in the report and viva.</p></div>
 </section>
 
@@ -421,21 +475,26 @@ details[open] summary{margin-bottom:8px}
 <section class="page" id="recovery" data-title="Recovery and security">
   <h2>Recovery and security</h2>
   <p class="lede">Overwriting low bits destroys information. The location map is how the project gets it back.</p>
+<div class="film" data-film="recovery" aria-label="Animated explainer: saving and restoring the low bits"></div>
+
 
   <h3>The location map</h3>
   <p>Before embedding, the sender reads the lower 3 bits of every channel value it will touch: header pixels, the R and G of used EMD pixels, and the B of used OLSB pixels. These are packed in a fixed order and compressed with zlib. After extraction, the receiver writes them back in the same order. Lossy overwriting becomes reversible.</p>
 
-  <h3>Encryption, in plain words</h3>
+  <aside class="life"><h4>In everyday life: the tailor's bag</h4><p>A tailor shortens your trousers but keeps the cut-off cloth in a labelled bag inside the pocket, with a note saying exactly where each piece came from. Later, anyone with the bag and the note can stitch the trousers back to the original length.</p><p>The location map is that bag. It records the exact low bits that were overwritten, so they can be sewn back on.</p></aside>
+<h3>Encryption, in plain words</h3>
   <p><strong>PBKDF2</strong> turns a password into a strong 256-bit key by hashing it many times with a random salt, which makes password guessing slow. <strong>AES-256-GCM</strong> encrypts the secret and the location map together and adds a 16-byte tag. If anyone changes even one bit of the stego image, or uses the wrong password, decryption fails loudly instead of returning garbage.</p>
 
-  <h3>The 64-byte header</h3>
+  <aside class="life"><h4>In everyday life: a tamper-proof envelope</h4><p>Bank PIN letters come in sealed envelopes that show if anyone opened them. AES-GCM is that envelope for data: the contents are unreadable, and if anyone changes even one bit, the "seal" breaks and the receiver knows.</p><p>PBKDF2 is like a lock that takes a few seconds to turn. That doesn't bother you, but someone trying millions of guessed passwords gets stuck.</p></aside>
+<h3>The 64-byte header</h3>
   <p>The receiver needs a few facts before it can read anything: the salt, the nonce, the ciphertext length and the thresholds. These go in a fixed 64-byte header stored at a known place. In the starter code, that's the Blue low bits of the first 171 pixels. Here is one layout that works:</p>
   <div class="hdr" aria-label="Header layout">
     <span style="flex:4">magic</span><span style="flex:2">ver</span><span style="flex:16">salt</span><span style="flex:12">nonce</span><span style="flex:4">ct len</span><span style="flex:4">EMD bytes</span><span style="flex:4">t1, t2</span><span style="flex:18">padding</span>
   </div>
   <p class="hint">Bytes: 4 + 2 + 16 + 12 + 4 + 4 + 4 + 18 = 64. Your repo's <code>core/payload.py</code> may use a different order; what matters is that both sides agree.</p>
 
-  <h3>What the receiver gets</h3>
+  <h3>Watch next</h3><div class="watch"><a class="vid" href="https://www.youtube.com/watch?v=O4xNJsjtN6E" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>AES Explained (Advanced Encryption Standard)</b><small>Computerphile · 14 min</small></span></a><a class="vid" href="https://www.youtube.com/results?search_query=Computerphile+AES+GCM+Galois+Counter+Mode" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>AES GCM (Galois Counter Mode)</b><small>Computerphile · search on YouTube</small></span></a></div>
+<h3>What the receiver gets</h3>
   <div class="tablewrap"><table>
     <tr><th>Situation</th><th>Result</th></tr>
     <tr><td>Correct password, untouched image</td><td>Secret recovered, cover restored with 0 differences</td></tr>
@@ -450,7 +509,8 @@ details[open] summary{margin-bottom:8px}
   <p class="lede">The recovery map travels inside the same image as the secret. So the key question is whether there is room left for the secret.</p>
   <p>Count the cost per pixel. An OLSB pixel carries 3 bits, but its map entry stores 3 original bits. An EMD pair carries 2.32 bits, but its map stores 6 original bits (3 for R, 3 for G). zlib can only help if those original low bits have patterns. In real photos, low bits are close to random noise, so they barely compress.</p>
 
-  <div class="slab">
+  <aside class="life"><h4>In everyday life: a suitcase full of receipts</h4><p>You're allowed one suitcase. You want to bring gifts, but the rule says you must also carry the receipt for everything you rearranged inside the suitcase. If each receipt is as big as the gift it lets you pack, the suitcase fills with receipts and there's no room for gifts.</p><p>That's the situation here. The "receipts" (original low bits) are nearly as big as the "gifts" (secret bits). The fix is to find a way to make room that doesn't need a full receipt for every change.</p></aside>
+<div class="slab">
     <h3 style="margin-top:0">Net capacity calculator</h3>
     <div class="controls">
       <label>Image side <select id="capSide"><option>256</option><option selected>512</option><option>1024</option></select></label>
@@ -495,7 +555,8 @@ details[open] summary{margin-bottom:8px}
     <tr><td>Carrier recovery</td><td>What share of pixels came back exactly?</td><td>Exactly 100%</td></tr>
   </table></div>
 
-  <div class="slab">
+  <aside class="life"><h4>In everyday life: marking a photocopy</h4><p>Compare a photocopy with the original. MSE is like measuring, on average, how far each dot is off. PSNR turns that into a score where higher is better, like a mark out of 100 where 40+ means "you can't tell them apart". SSIM asks a different question: do the shapes and edges still look right, the way a teacher checks your drawing and not just your ink?</p><p>BER is like a dictation test: out of all the words (bits) read back, how many were wrong? It must be zero.</p></aside>
+<div class="slab">
     <h3 style="margin-top:0">PSNR from MSE</h3>
     <label>MSE <input type="range" id="mse" min="-300" max="200" value="-100"> <b id="mseV"></b></label>
     <div class="big" id="psnrV" style="margin-top:8px"></div>
@@ -834,6 +895,77 @@ function emdEmbed(p1,p2,d){var need=((d-f5(p1,p2))%5+5)%5;if(!need)return[p1,p2]
 
 /* PSNR */
 (function(){var s=document.getElementById("mse");function p(){var m=Math.pow(10,+s.value/100);document.getElementById("mseV").textContent=m<0.1?m.toFixed(4):m.toFixed(2);document.getElementById("psnrV").textContent=(10*Math.log10(65025/m)).toFixed(1)+" dB"}s.addEventListener("input",p);p()})();
+
+/* ---------- animated films ---------- */
+(function(){
+  function g(inner,d,anim){return '<g class="a '+(anim||'')+'" style="--d:'+(d||0)+'s">'+inner+'</g>'}
+  function box(x,y,w,h,fill,label,d,o){o=o||{};return g('<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(o.rx==null?8:o.rx)+'" class="'+fill+'"/>'+(label!=null?'<text x="'+(x+w/2)+'" y="'+(y+h/2)+'" class="'+(o.tc||'tx')+(o.mono?' mono':'')+'" text-anchor="middle" dominant-baseline="central" font-size="'+(o.fs||14)+'">'+label+'</text>':''),d,o.anim)}
+  function t(x,y,s,d,o){o=o||{};return '<text x="'+x+'" y="'+y+'" class="a fade '+(o.c||'tx')+(o.mono?' mono':'')+'" style="--d:'+(d||0)+'s" text-anchor="'+(o.a||'middle')+'" dominant-baseline="central" font-size="'+(o.fs||13)+'">'+s+'</text>'}
+  function ar(x1,y1,x2,y2,d){return g('<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" class="ln" marker-end="url(#fa)"/>',d,'fade')}
+  function bits(x,y,v,d,o){o=o||{};var s='',cw=o.cw||30;for(var k=7;k>=0;k--){var i=7-k,on=(v>>k)&1,lo=k<3,f=on?(lo?'f-lo':'f-up'):'f-sunk',tc=on?(lo?'td':'tw'):'tm';if(o.bad===k){f='f-bad';tc='tw'}
+    s+=box(x+i*(cw+4),y,cw,cw+4,f,on,(d||0)+(o.stag?i*0.06:0),{tc:tc,mono:1,fs:15,anim:(o.dropLow&&lo)?'drop':''})}return s}
+  function photo(x,y,d,anim){return g('<rect x="'+x+'" y="'+y+'" width="96" height="72" rx="8" class="f-sunk" stroke="var(--line)"/><circle cx="'+(x+72)+'" cy="'+(y+20)+'" r="9" class="f-lo"/><polygon points="'+(x+6)+','+(y+66)+' '+(x+36)+','+(y+30)+' '+(x+56)+','+(y+52)+' '+(x+70)+','+(y+40)+' '+(x+90)+','+(y+66)+'" class="f-up"/>',d,anim)}
+  function lock(x,y,d){return g('<path d="M'+(x+10)+' '+(y+18)+' v-6 a10 10 0 0 1 20 0 v6" class="ln" stroke-width="3"/><rect x="'+x+'" y="'+(y+18)+'" width="40" height="30" rx="6" class="f-ink"/><circle cx="'+(x+20)+'" cy="'+(y+33)+'" r="4" fill="var(--amber)"/>',d)}
+  var F={
+   idea:[
+    ["A sender has an ordinary photo and a secret note.",function(){return photo(60,60,0)+box(230,78,80,40,'f-lo','PIN 4471',0.35,{tc:'td',fs:13})+t(108,152,'photo',0.5,{c:'tm'})+t(270,138,'secret',0.6,{c:'tm'})}],
+    ["The note is hidden inside the photo. To everyone else, it's just a normal photo.",function(){return photo(132,50,0)+box(160,74,40,20,'f-lo','',0.2,{anim:'slide'})+t(180,152,'looks completely normal',0.8,{c:'tm'})}],
+    ["The receiver uses the password to pull the note back out.",function(){return photo(60,60,0)+box(230,78,80,40,'f-lo','PIN 4471',0.2,{tc:'td',fs:13,anim:'slidel'})+lock(250,20,0.5)+t(270,138,'password needed',0.7,{c:'tm'})}],
+    ["And the photo is restored exactly: 0 pixels different from the original.",function(){return photo(132,50,0)+t(180,152,'✓ identical to the original',0.4,{c:'tok',fs:15})}]
+   ],
+   bits:[
+    ["Take one pixel. Its Red value is 173.",function(){return box(130,60,100,70,'f-sur','173',0,{fs:34})+t(180,150,'Red value (0 to 255)',0.4,{c:'tm'})}],
+    ["In binary, 173 is 8 bits: 10101101.",function(){return t(180,40,'173 =',0,{fs:15})+bits(46,70,173,0.1,{stag:1})+t(180,138,'128 + 32 + 8 + 4 + 1',0.8,{c:'tm'})}],
+    ["The top 5 bits decide how the colour looks. The bottom 3 are fine detail.",function(){return bits(46,50,173,0)+g('<line x1="46" y1="104" x2="210" y2="104" stroke="var(--upper)" stroke-width="3"/>',0.2,'fade')+g('<line x1="216" y1="104" x2="314" y2="104" stroke="var(--amber)" stroke-width="3"/>',0.4,'fade')+t(128,126,'upper 5 bits = 168',0.3)+t(265,126,'lower 3 = 5',0.5)}],
+    ["Overwrite the bottom 3 with secret bits 010. 173 becomes 170: a change of 3 out of 255.",function(){return bits(46,40,170,0,{dropLow:1})+'<rect class="a" style="--d:.4s" x="100" y="114" width="62" height="42" rx="8" fill="rgb(173,96,210)"/><rect class="a" style="--d:.6s" x="198" y="114" width="62" height="42" rx="8" fill="rgb(170,96,210)"/>'+t(131,176,'before 173',0.5,{c:'tm'})+t(229,176,'after 170',0.7,{c:'tm'})}]
+   ],
+   pipeline:[
+    ["Start with a cover image and a secret message.",function(){return photo(60,50,0)+box(230,64,90,44,'f-lo','secret',0.3,{tc:'td'})}],
+    ["Look only at the upper bits and give every pixel a busy score.",function(){var s=photo(20,50,0)+ar(124,86,160,86,0.2);for(var y=0;y<5;y++)for(var x=0;x<5;x++){var v=(x+y)%4;s+=box(172+x*26,34+y*22,22,18,v>2?'f-b':v>1?'f-g':'f-gs',null,0.3+(x+y)*0.05,{rx:3})}return s+t(237,160,'score map',0.9,{c:'tm'})}],
+    ["Smooth pixels will get EMD. Busy pixels will get OLSB.",function(){return box(40,50,130,44,'f-gs','smooth → EMD',0,{tc:'tx',fs:13})+box(190,50,130,44,'f-b','busy → OLSB',0.3,{tc:'tw',fs:13})+t(180,130,'decided from bits that never change',0.6,{c:'tm'})}],
+    ["Save the low bits about to be overwritten, then lock them with the secret using AES.",function(){return box(20,60,110,40,'f-sur','location map',0,{fs:13})+t(150,80,'+',0.2,{fs:20})+box(170,60,70,40,'f-lo','secret',0.3,{tc:'td',fs:13})+ar(248,80,280,80,0.5)+lock(290,48,0.7)}],
+    ["Hide everything in one stego image and send it.",function(){return photo(80,50,0)+box(96,62,30,16,'f-ink','',0.3,{rx:3,anim:'slide'})+ar(190,86,250,86,0.5)+t(290,86,'send',0.7,{fs:15})}],
+    ["Receiver: same upper bits → same map → read → unlock → put the old bits back.",function(){return box(10,70,70,40,'f-sur','read',0,{fs:13})+ar(84,90,100,90,0.2)+box(104,70,70,40,'f-ink','unlock',0.3,{tc:'tw',fs:13})+ar(178,90,194,90,0.5)+box(198,70,70,40,'f-lo','restore',0.6,{tc:'td',fs:13})+ar(272,90,288,90,0.8)+t(320,90,'✓',0.9,{c:'tok',fs:26})}]
+   ],
+   emd:[
+    ["A Red–Green pair: (103, 96). Its digit is f = (103 + 2×96) mod 5 = 0.",function(){return box(70,50,80,54,'f-sur','103',0,{fs:22})+box(170,50,80,54,'f-sur','96',0.2,{fs:22})+t(110,122,'Red',0.3,{c:'tm'})+t(210,122,'Green',0.3,{c:'tm'})+box(270,56,60,42,'f-up','f = 0',0.5,{tc:'tw'})}],
+    ["We want to hide the digit 1. The easy move: Red 103 → 104.",function(){return box(40,50,80,54,'f-sur','103',0,{fs:22})+ar(126,77,166,77,0.3)+box(172,50,80,54,'f-sur','104',0.5,{fs:22})+t(212,122,'+1',0.6,{c:'tm'})}],
+    ["But 103 → 104 changes an upper bit. The receiver's map would break, so it's not allowed.",function(){return t(80,50,'103',0,{a:'end',fs:14})+bits(92,34,103,0.1,{cw:26})+t(80,100,'104',0.3,{a:'end',fs:14})+bits(92,84,104,0.4,{cw:26,bad:3})+t(180,150,'✗ upper bit changed',0.8,{c:'tbad',fs:15})}],
+    ["Safe move: (102, 97). Now f = (102 + 194) mod 5 = 1, and every upper bit is unchanged.",function(){return box(70,50,80,54,'f-g','102',0,{tc:'tw',fs:22})+box(170,50,80,54,'f-g','97',0.2,{tc:'tw',fs:22})+t(110,122,'−1',0.3,{c:'tm'})+t(210,122,'+1',0.3,{c:'tm'})+box(270,56,60,42,'f-up','f = 1',0.5,{tc:'tw'})+t(180,160,'✓ digit hidden',0.8,{c:'tok',fs:15})}]
+   ],
+   olsb:[
+    ["A pixel in a busy area. Its Blue value is 150 = 10010110.",function(){return t(180,40,'Blue 150',0,{fs:15})+bits(46,66,150,0.1,{stag:1})}],
+    ["Take 3 secret bits: 101.",function(){return bits(46,40,150,0)+box(216,110,98,38,'f-lo','1 0 1',0.3,{tc:'td',mono:1,anim:'drop'})}],
+    ["Replace the last 3 bits: 10010101 = 149.",function(){return bits(46,50,149,0,{dropLow:1})+t(180,130,'149',0.5,{fs:22})}],
+    ["A change of only 1. To read it back: 149 & 7 = 5 = 101.",function(){return t(180,60,'150 → 149',0,{fs:22})+t(180,110,'149 & 7 = 5 = 101',0.4,{mono:1,fs:15})+t(180,150,'✓ secret bits recovered',0.8,{c:'tok',fs:15})}]
+   ],
+   recovery:[
+    ["Before overwriting, copy each original low-bit group into the location map.",function(){var s='';[['111',0],['000',0.2],['110',0.4]].forEach(function(p,i){s+=box(30,30+i*44,70,34,'f-lo',p[0],p[1],{tc:'td',mono:1})});return s+ar(110,95,180,95,0.6)+box(190,60,130,70,'f-sur','location map',0.8,{fs:14})}],
+    ["Compress the map and pack it together with the secret.",function(){return box(30,60,110,40,'f-sur','map (zlib)',0,{fs:13})+t(160,80,'+',0.2,{fs:20})+box(180,60,70,40,'f-lo','secret',0.3,{tc:'td',fs:13})+ar(260,80,290,80,0.5)+box(296,58,44,44,'f-ink','',0.7,{rx:6})}],
+    ["Lock the package with AES-256-GCM. If anyone changes a single bit, the seal breaks.",function(){return lock(160,40,0)+t(180,120,'wrong password or tampering → rejected',0.5,{c:'tm'})}],
+    ["The receiver unlocks it and writes the saved bits back. The image is exactly the original again.",function(){var s='';[['111',0],['000',0.2],['110',0.4]].forEach(function(p,i){s+=box(200,30+i*44,70,34,'f-lo',p[0],p[1],{tc:'td',mono:1,anim:'slidel'})});return box(30,60,110,70,'f-sur','location map',0,{fs:13})+ar(146,95,190,95,0.1)+s+t(310,95,'✓',0.8,{c:'tok',fs:28})}]
+   ]
+  };
+  var defs='<defs><marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" fill="#8896AE"/></marker></defs>';
+  var titles={idea:"The disappearing ink",bits:"Upper and lower bits",pipeline:"The whole journey",emd:"Hiding the digit 1",olsb:"Overwriting three bits",recovery:"Saving and restoring the low bits"};
+  var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var players=[];
+  document.querySelectorAll(".film").forEach(function(el){
+    var id=el.dataset.film,frames=F[id];if(!frames)return;
+    el.innerHTML='<div class="film-head">'+titles[id]+'<span>animated explainer</span></div><div class="film-stage"></div><p class="film-cap" aria-live="polite"></p><div class="film-bar"><button class="fplay"></button><div class="fdots"></div><button class="fnext">Next</button></div>';
+    var stage=el.querySelector(".film-stage"),cap=el.querySelector(".film-cap"),dots=el.querySelector(".fdots"),play=el.querySelector(".fplay"),i=0,timer=null,playing=false;
+    frames.forEach(function(_,k){var b=document.createElement("button");b.setAttribute("aria-label","Scene "+(k+1));b.addEventListener("click",function(){go(k);stop()});dots.appendChild(b)});
+    function go(k){i=(k+frames.length)%frames.length;stage.innerHTML=('<svg viewBox="0 0 360 190" role="img" aria-label="'+frames[i][0].replace(/"/g,"")+'">'+defs+frames[i][1]()+'</svg>').replace(/#fa\)/g,'#fa-'+id+')').replace('id="fa"','id="fa-'+id+'"');cap.textContent=(i+1)+"/"+frames.length+"  "+frames[i][0];dots.querySelectorAll("button").forEach(function(b,j){b.setAttribute("aria-current",j===i)})}
+    function tick(){if(i===frames.length-1){stop();play.textContent="Replay";return}go(i+1)}
+    function start(){if(i===frames.length-1)go(0);playing=true;play.textContent="Pause";clearInterval(timer);timer=setInterval(tick,4200)}
+    function stop(){playing=false;clearInterval(timer);play.textContent="Play"}
+    play.addEventListener("click",function(){playing?stop():start()});
+    el.querySelector(".fnext").addEventListener("click",function(){stop();go(i+1)});
+    go(0);play.textContent="Play";
+    players.push({el:el,start:start,stop:stop,isOn:function(){return playing}});
+  });
+  window.addEventListener("pagechange",function(e){players.forEach(function(p){var here=p.el.closest(".page").id===e.detail;if(!here)p.stop();else if(!reduced)p.start()})});
+})();
 
 /* ---------- 3D ---------- */
 var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
