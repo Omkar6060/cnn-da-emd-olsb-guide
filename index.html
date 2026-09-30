@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bitplane Lab · CNN-DA-EMD-OLSB study guide</title>
+<meta name="description" content="A beginner's guide to understanding and building the CNN-DA-EMD-OLSB reversible data hiding project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F5;--surface:#FFFFFF;--sunk:#E3E8EF;--ink:#172033;--muted:#56627A;--line:#D2D9E4;
+  --r:#D64545;--g:#1F8A62;--g-soft:#8FCFB4;--b:#3565D0;--amber:#C9850F;--upper:#5B6B82;--danger:#B42318;--ok:#1F8A62;
+  --slab:#C7CFDB;--code-bg:#172033;--code-ink:#E6EBF3;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1726;--surface:#16213A;--sunk:#0B1220;--ink:#E6EBF3;--muted:#9AA7BD;--line:#2A3854;
+  --r:#F06A6A;--g:#3CC08E;--g-soft:#1E6B50;--b:#6D98F2;--amber:#F2B544;--upper:#8796AE;--danger:#F97066;--ok:#3CC08E;
+  --slab:#0A101C;--code-bg:#0A101C;--code-ink:#DCE3EE;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1726;--surface:#16213A;--sunk:#0B1220;--ink:#E6EBF3;--muted:#9AA7BD;--line:#2A3854;
+  --r:#F06A6A;--g:#3CC08E;--g-soft:#1E6B50;--b:#6D98F2;--amber:#F2B544;--upper:#8796AE;--danger:#F97066;--ok:#3CC08E;
+  --slab:#0A101C;--code-bg:#0A101C;--code-ink:#DCE3EE;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 var(--body);-webkit-font-smoothing:antialiased}
+img,canvas{max-width:100%}
+a{color:var(--b)}
+:focus-visible{outline:3px solid var(--b);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);line-height:1.12;letter-spacing:-.01em;margin:0 0 .5em}
+h1{font-size:clamp(2.1rem,4.6vw,3.1rem);font-weight:700}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem);font-weight:700}
+h3{font-size:1.2rem;font-weight:500;margin-top:1.8em}
+p,li{max-width:68ch}
+code{font-family:var(--mono);font-size:.88em;background:var(--sunk);padding:.1em .35em;border-radius:4px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:12px;padding:10px 18px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.1rem;text-decoration:none;color:var(--ink);margin-right:auto}
+.brand-mark{display:grid;gap:2px;width:22px}
+.brand-mark i{display:block;height:4px;border-radius:1px;background:var(--upper)}
+.brand-mark i:nth-child(n+4){background:var(--amber)}
+.iconbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 12px;font:inherit;font-size:.9rem;cursor:pointer}
+.menu-btn{display:none}
+
+/* layout */
+.shell{display:grid;grid-template-columns:270px minmax(0,1fr);min-height:calc(100vh - 60px)}
+.rail{position:sticky;top:61px;align-self:start;height:calc(100vh - 61px);overflow:auto;padding:22px 14px 40px;border-right:1px solid var(--line)}
+.rail ol{list-style:none;margin:0;padding:0;counter-reset:ch}
+.rail li{max-width:none}
+.rail a{display:flex;gap:10px;align-items:baseline;padding:8px 10px;border-radius:10px;text-decoration:none;color:var(--muted);font-size:.95rem;line-height:1.35}
+.rail a .n{font-family:var(--display);font-weight:700;min-width:1.6em;color:var(--upper)}
+.rail a:hover{background:var(--sunk);color:var(--ink)}
+.rail a[aria-current="page"]{background:var(--surface);color:var(--ink);box-shadow:0 3px 0 var(--slab);font-weight:700}
+.rail a.done .n::after{content:"✓";color:var(--ok);margin-left:2px;font-size:.8em}
+.progress{margin:0 10px 18px;font-size:.85rem;color:var(--muted)}
+.bar{height:6px;background:var(--sunk);border-radius:3px;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--amber);width:0;transition:width .4s}
+main{padding:34px clamp(18px,4vw,56px) 80px;min-width:0}
+.page{display:none;max-width:860px}
+.page.on{display:block}
+.lede{font-size:1.2rem;color:var(--muted);max-width:60ch}
+
+/* slabs: the 3D motif borrowed from bitplanes */
+.slab{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:0 6px 0 var(--slab);margin:22px 0 28px}
+.slab.flat{box-shadow:none}
+.note{border-left:4px solid var(--amber);background:var(--surface);padding:14px 18px;margin:20px 0;border-radius:0}
+.note.warn{border-left-color:var(--danger)}
+.note p{margin:.3em 0}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:12px 18px;font:700 1rem var(--body);cursor:pointer;background:var(--ink);color:var(--bg);box-shadow:0 5px 0 var(--upper);transform:translateY(0);transition:transform .08s,box-shadow .08s;text-decoration:none}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--upper)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 5px 0 var(--slab)}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:48px;padding-top:24px;border-top:1px solid var(--line)}
+.done-toggle{display:flex;align-items:center;gap:8px;font-size:.95rem;color:var(--muted);cursor:pointer}
+.done-toggle input{width:20px;height:20px;accent-color:var(--ok)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+.tablewrap{overflow-x:auto;margin:16px 0}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--display);font-weight:500;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;align-items:center;max-width:1100px}
+.hero h1{margin-bottom:.35em}
+.stage{position:relative;aspect-ratio:1/1;width:100%;border-radius:18px;background:radial-gradient(circle at 50% 40%,var(--surface),var(--bg) 70%);border:1px solid var(--line)}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab;border-radius:18px}
+.stage .legend{position:absolute;left:14px;bottom:12px;font-size:.8rem;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;pointer-events:none}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+.controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;margin-top:14px;font-size:.95rem}
+.controls label{display:flex;align-items:center;gap:10px}
+input[type=range]{accent-color:var(--amber);width:160px}
+.hint{font-size:.88rem;color:var(--muted)}
+
+/* bits */
+.bits{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin:14px 0 6px}
+.bit{border:0;border-radius:10px;padding:10px 0 8px;font:700 1.35rem var(--mono);cursor:pointer;background:var(--sunk);color:var(--ink);box-shadow:0 4px 0 var(--slab);transition:transform .08s}
+.bit:active{transform:translateY(3px)}
+.bit.up{border-top:4px solid var(--upper)}
+.bit.lo{border-top:4px solid var(--amber)}
+.bit.one.up{background:var(--upper);color:var(--surface)}
+.bit.one.lo{background:var(--amber);color:#2A1C02}
+.bitlabels{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;font-size:.78rem;color:var(--muted);text-align:center}
+.readout{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:14px}
+.readout b{font-family:var(--mono);font-size:1.05rem}
+.chanpick{display:flex;gap:8px;margin:6px 0 4px}
+.chanpick button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:700 .95rem var(--body);cursor:pointer}
+.chanpick button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.swatch{width:64px;height:64px;border-radius:12px;border:1px solid var(--line);box-shadow:0 5px 0 var(--slab)}
+
+/* pipeline slabs */
+.tracks{display:grid;grid-template-columns:1fr 1fr;gap:26px;perspective:1100px}
+.track h3{margin-top:0}
+.step{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 12px;box-shadow:0 5px 0 var(--slab);font:inherit;color:inherit;cursor:pointer;transform:rotateX(8deg);transform-origin:top;transition:transform .2s}
+.step:hover,.step[aria-expanded="true"]{transform:rotateX(0)}
+.step strong{display:block;font-family:var(--display);font-weight:500;font-size:1.05rem}
+.step .who{font-size:.85rem;color:var(--muted)}
+.step .more{display:none;margin-top:8px;font-size:.95rem}
+.step[aria-expanded="true"] .more{display:block}
+.step.an{border-left:5px solid var(--upper)}
+.step.em{border-left:5px solid var(--g)}
+.step.ol{border-left:5px solid var(--b)}
+.step.pk{border-left:5px solid var(--amber)}
+
+/* emd grid */
+.emdgrid{display:grid;grid-template-columns:auto repeat(5,minmax(0,1fr));gap:5px;max-width:420px;margin:14px 0;font-family:var(--mono);font-size:.95rem}
+.emdgrid div{padding:9px 0;text-align:center;border-radius:8px}
+.emdgrid .hd{color:var(--muted);font-size:.8rem;padding:9px 4px}
+.cell{background:var(--sunk)}
+.cell.out{opacity:.3;background:repeating-linear-gradient(45deg,var(--sunk),var(--sunk) 4px,transparent 4px,transparent 8px)}
+.cell.target{outline:2px solid var(--g);outline-offset:-2px}
+.cell.now{background:var(--upper);color:var(--surface)}
+.cell.pick{background:var(--g);color:var(--surface);font-weight:700}
+.digits{display:flex;gap:6px}
+.digits button{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:700 1.1rem var(--mono);cursor:pointer;box-shadow:0 4px 0 var(--slab)}
+.digits button[aria-pressed="true"]{background:var(--g);color:var(--surface);border-color:var(--g)}
+input[type=number]{width:90px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:1rem var(--mono)}
+
+/* header layout */
+.hdr{display:flex;border-radius:10px;overflow:hidden;border:1px solid var(--line);font-size:.78rem;margin:14px 0 4px}
+.hdr span{padding:10px 6px;text-align:center;border-right:1px solid var(--line);background:var(--surface);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr span:last-child{border-right:0;background:var(--sunk)}
+
+/* code */
+pre{position:relative;background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:18px 18px 16px;overflow-x:auto;font:14px/1.55 var(--mono);box-shadow:0 6px 0 var(--slab);margin:14px 0 24px}
+pre code{background:none;padding:0;font-size:inherit;color:inherit}
+.copy{position:absolute;top:8px;right:8px;font:12px var(--body);padding:4px 10px;border-radius:8px;border:1px solid #3A4A68;background:#223050;color:#E6EBF3;cursor:pointer}
+.check{list-style:none;padding:0}
+.check li::before{content:"☐ ";color:var(--g)}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:10px 0;box-shadow:0 4px 0 var(--slab)}
+summary{cursor:pointer;font-weight:700}
+details[open] summary{margin-bottom:8px}
+.big{font-family:var(--display);font-weight:700;font-size:2rem}
+.neg{color:var(--danger)}.pos{color:var(--ok)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:18px;align-items:start}
+.mini{width:100%;image-rendering:pixelated;border-radius:10px;border:1px solid var(--line);aspect-ratio:1/1}
+.countrow{display:flex;gap:18px;flex-wrap:wrap;font-size:.95rem;margin-top:10px}
+.nogl{display:none;padding:30px;text-align:center;color:var(--muted)}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .menu-btn{display:inline-block}
+  .rail{position:fixed;top:calc(61px + env(safe-area-inset-top,0px));left:0;right:0;bottom:0;height:auto;z-index:15;background:var(--bg);transform:translateX(-100%);transition:transform .25s;border-right:0;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
+  .rail.open{transform:none}
+  .hero,.tracks,.split{grid-template-columns:1fr}
+  .stage{max-width:520px}
+  body{font-size:16.5px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.step{transform:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Bitplane Lab</a>
+  <button class="iconbtn menu-btn" id="menuBtn" aria-expanded="false" aria-controls="rail">Chapters</button>
+  <button class="iconbtn" id="themeBtn" aria-label="Switch light or dark theme">Theme</button>
+</header>
+
+<div class="shell">
+<nav class="rail" id="rail" aria-label="Chapters">
+  <div class="progress"><span id="progText">0 of 11 chapters done</span><div class="bar"><i id="progBar"></i></div></div>
+  <ol id="chapterList"></ol>
+</nav>
+
+<main id="main">
+
+<!-- HOME -->
+<section class="page" id="home" data-title="Start here">
+  <div class="hero">
+    <div>
+      <h1>Hide a secret inside a photo. Then give the photo back, bit for bit.</h1>
+      <p class="lede">A beginner's guide to the CNN-DA-EMD-OLSB project: what every part does, why it's there, and how to build it yourself in Python.</p>
+      <div class="controls" style="margin-top:22px">
+        <a class="btn" href="#idea">Start chapter 1</a>
+        <a class="btn ghost" href="#build">Jump to the build</a>
+      </div>
+    </div>
+    <div>
+      <div class="stage" id="heroStage">
+        <canvas id="heroCanvas" aria-label="3D stack of the eight bitplanes of an image. Top five are grey, bottom three are amber."></canvas>
+        <div class="nogl">3D view needs WebGL. Every chapter still works without it.</div>
+        <div class="legend"><span><i class="sw" style="background:var(--upper)"></i>Upper 5 bits: never touched</span><span><i class="sw" style="background:var(--amber)"></i>Lower 3 bits: carry data</span></div>
+      </div>
+      <div class="controls">
+        <label>Pull layers apart <input type="range" id="gap" min="0" max="100" value="45"></label>
+        <label><input type="checkbox" id="rain" checked> Send secret bits in</label>
+      </div>
+      <p class="hint">Drag to turn the stack. Each slab is one bit of every pixel in a small image.</p>
+    </div>
+  </div>
+
+  <div class="slab" style="max-width:860px">
+    <h3 style="margin-top:0">Look closely at the slabs</h3>
+    <p>The top slabs show clear shapes: they carry the picture. The bottom three look like static, because changing them barely changes what you see. This project hides data in that static and keeps the top five slabs untouched, so the receiver can always re-read them and make the same decisions the sender made.</p>
+  </div>
+
+  <h2>How to use this guide</h2>
+  <div class="grid2">
+    <div class="slab flat"><strong>Go in order.</strong> Each chapter builds on the last. Chapters 1–3 need no maths beyond binary numbers.</div>
+    <div class="slab flat"><strong>Play with every widget.</strong> The calculators run the same logic as the Python code in chapter 10.</div>
+    <div class="slab flat"><strong>Tick chapters off.</strong> Your progress stays in this browser, so you can pick up where you left off.</div>
+  </div>
+  <p class="hint">Based on the 1st-evaluation project report, B.Tech CSE 7th semester, Parala Maharaja Engineering College, Berhampur, session 2026–27.</p>
+</section>
+
+<!-- 1 IDEA -->
+<section class="page" id="idea" data-title="The big idea">
+  <h2>The big idea</h2>
+  <p class="lede">Three words get mixed up constantly. Pin them down first.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Term</th><th>What it does</th><th>Everyday picture</th></tr>
+    <tr><td><strong>Encryption</strong></td><td>Scrambles a message so only the key holder can read it. Everyone can see a secret exists.</td><td>A locked box sent by courier.</td></tr>
+    <tr><td><strong>Steganography</strong></td><td>Hides the message inside something ordinary, so nobody knows a secret exists.</td><td>A note written in invisible ink on a postcard.</td></tr>
+    <tr><td><strong>Reversible data hiding (RDH)</strong></td><td>Steganography where, after reading the secret, you can restore the original carrier exactly.</td><td>Invisible ink that also comes off completely, leaving the postcard like new.</td></tr>
+  </table></div>
+  <p>This project does all three at once. It encrypts the secret, hides it in an RGB image, and makes sure the original image can be rebuilt with zero pixel differences.</p>
+
+  <h3>Why "give the photo back" matters</h3>
+  <p>In medical scans, military imagery, satellite data or court evidence, even a one-value change to a pixel can be unacceptable. RDH lets you attach hidden information, such as a patient ID or an authentication tag, and later remove it without a trace.</p>
+
+  <h3>The words in the project name</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Piece</th><th>Plain meaning</th><th>Chapter</th></tr>
+    <tr><td>CNN</td><td>A small neural network that looks at the image and scores how "busy" each area is.</td><td>4</td></tr>
+    <tr><td>DA (distortion-aware)</td><td>Hide more where changes won't be noticed, less where they would.</td><td>4</td></tr>
+    <tr><td>EMD</td><td>Exploiting Modification Direction: hide a digit by nudging a pair of pixel values by about 1.</td><td>5</td></tr>
+    <tr><td>OLSB</td><td>Overwrite the lowest 3 bits of a pixel with data. Used in busy areas.</td><td>6</td></tr>
+    <tr><td>Adaptive</td><td>The choice between EMD and OLSB is made per pixel.</td><td>4</td></tr>
+  </table></div>
+  <div class="note"><p><strong>Remember one sentence:</strong> decide where to hide using bits you never change, and pack a record of every bit you did change inside the image itself.</p></div>
+</section>
+
+<!-- 2 BITS -->
+<section class="page" id="bits" data-title="Pixels and bits">
+  <h2>Pixels and bits</h2>
+  <p class="lede">Every colour pixel is three numbers, Red, Green and Blue, each from 0 to 255. Each number is 8 bits.</p>
+  <div class="slab">
+    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+      <div class="swatch" id="swatch"></div>
+      <div>
+        <div class="chanpick" role="group" aria-label="Pick a channel">
+          <button data-ch="0" aria-pressed="true">R</button><button data-ch="1" aria-pressed="false">G</button><button data-ch="2" aria-pressed="false">B</button>
+        </div>
+        <label class="hint">Value <input type="range" id="chanVal" min="0" max="255" value="173"></label>
+      </div>
+    </div>
+    <div class="bits" id="bitRow"></div>
+    <div class="bitlabels"><span>128</span><span>64</span><span>32</span><span>16</span><span>8</span><span>4</span><span>2</span><span>1</span></div>
+    <div class="readout">
+      <span>Value <b id="rdVal"></b></span>
+      <span>Upper part (x &amp; 0xF8) <b id="rdUp"></b></span>
+      <span>Lower part (x &amp; 7) <b id="rdLo"></b></span>
+    </div>
+    <p class="hint">Tap any bit to flip it. Flip a lower (amber) bit and watch the swatch: the colour hardly moves. Flip the top bit and it jumps.</p>
+  </div>
+
+  <h3>What <code>x &amp; 0xF8</code> means</h3>
+  <p><code>0xF8</code> is <code>11111000</code> in binary. The <code>&amp;</code> (AND) keeps a bit only where both numbers have a 1. So <code>x &amp; 0xF8</code> keeps the top five bits and zeroes the bottom three. The report calls this the <strong>upper-bitplane representation</strong>, <code>Iu = I &amp; 0xF8</code>.</p>
+  <p>Changing only the lower three bits moves a value by at most 7, which is about 3% of the 0–255 range. That's why the lower bits are where data goes.</p>
+
+  <h3>Bitplanes</h3>
+  <p>Take bit number 7 of every pixel and you get a black-and-white picture: bitplane 7. Do this for each bit and you get 8 slabs, exactly the stack on the home page. High bitplanes look like the image. Low bitplanes look like noise.</p>
+  <div class="note"><p><strong>Key fact for later:</strong> if embedding only ever touches the lower 3 bits, the upper 5 bits of the stego image equal those of the cover. The receiver can recompute anything that depends only on the upper bits and get the identical answer.</p></div>
+</section>
+
+<!-- 3 PIPELINE -->
+<section class="page" id="pipeline" data-title="The whole pipeline">
+  <h2>The whole pipeline</h2>
+  <p class="lede">Two journeys: the sender embeds, the receiver extracts and restores. Tap a step to open it.</p>
+  <div class="tracks">
+    <div class="track">
+      <h3>Sender (embed)</h3>
+      <button class="step an" aria-expanded="false"><strong>1. Take the upper bits</strong><span class="who">Iu = I &amp; 0xF8</span><span class="more">All decisions are made from these. They survive embedding untouched.</span></button>
+      <button class="step an" aria-expanded="false"><strong>2. Score every pixel</strong><span class="who">DistortionCNN + Sobel/variance, fused</span><span class="more">A high score means a busy, textured area where changes hide well. Chapter 4.</span></button>
+      <button class="step an" aria-expanded="false"><strong>3. Sort into 3 classes</strong><span class="who">thresholds t1, t2</span><span class="more">Class 0 smooth, class 1 moderate, class 2 textured.</span></button>
+      <button class="step pk" aria-expanded="false"><strong>4. Save the original low bits</strong><span class="who">location map, zlib-compressed</span><span class="more">A record of every lower-3-bit value that will be overwritten. Needed for exact recovery. Chapter 7.</span></button>
+      <button class="step pk" aria-expanded="false"><strong>5. Encrypt</strong><span class="who">AES-256-GCM, key from PBKDF2</span><span class="more">Secret + location map become one ciphertext with a tamper-check tag.</span></button>
+      <button class="step em" aria-expanded="false"><strong>6a. EMD on classes 0 and 1</strong><span class="who">mod-5, Red–Green pairs</span><span class="more">Each pair carries one base-5 digit with a change of about ±1. Chapter 5.</span></button>
+      <button class="step ol" aria-expanded="false"><strong>6b. OLSB on class 2</strong><span class="who">3 bits into Blue</span><span class="more">Lower three Blue bits replaced by data. Chapter 6.</span></button>
+      <button class="step an" aria-expanded="false"><strong>7. Send one stego image</strong><span class="who">single image, no side files</span><span class="more">The header, ciphertext and recovery map all travel inside it.</span></button>
+    </div>
+    <div class="track">
+      <h3>Receiver (extract)</h3>
+      <button class="step an" aria-expanded="false"><strong>1. Take the upper bits of the stego</strong><span class="who">same as the cover's</span><span class="more">Because embedding never touched them.</span></button>
+      <button class="step an" aria-expanded="false"><strong>2. Rebuild the same score map</strong><span class="who">same CNN, same maths</span><span class="more">Identical input gives an identical map, if the code is deterministic.</span></button>
+      <button class="step an" aria-expanded="false"><strong>3. Rebuild the same classes</strong><span class="who">t1, t2 read from the header</span><span class="more">Now the receiver knows which pixels hold EMD digits and which hold OLSB bits.</span></button>
+      <button class="step em" aria-expanded="false"><strong>4. Read the digits and bits</strong><span class="who">f(R,G) mod 5, and Blue &amp; 7</span><span class="more">Joined back into the ciphertext.</span></button>
+      <button class="step pk" aria-expanded="false"><strong>5. Decrypt and verify</strong><span class="who">wrong password or tampering → rejected</span><span class="more">GCM refuses to decrypt if a single bit changed.</span></button>
+      <button class="step pk" aria-expanded="false"><strong>6. Unpack secret + location map</strong><span class="who">zlib decompress</span><span class="more">You now hold the secret and the original low bits.</span></button>
+      <button class="step an" aria-expanded="false"><strong>7. Write the original low bits back</strong><span class="who">cover restored exactly</span><span class="more">Compare arrays: 0 differences means 100% recovery.</span></button>
+    </div>
+  </div>
+  <div class="note"><p><strong>The design principle:</strong> decision information (upper bits) is kept separate from recovery information (the saved low bits). That separation is what lets one image carry everything.</p></div>
+</section>
+
+<!-- 4 DISTORTION -->
+<section class="page" id="distortion" data-title="The distortion map">
+  <h2>The distortion map</h2>
+  <p class="lede">Where can we change pixels without anyone noticing? In busy, textured areas. On a smooth sky, changes stand out.</p>
+
+  <h3>Two ways to measure "busy"</h3>
+  <p><strong>Analytical map.</strong> The Sobel operator measures how sharply brightness changes between neighbours (edges). Local variance measures how much the values in a 3×3 window spread out (texture). Both are normalised to 0–1 and averaged.</p>
+  <p><strong>DistortionCNN.</strong> A small neural network with three branches that look at the image at different scales. It learns patterns the simple formulas miss and outputs a sensitivity map for each of R, G and B.</p>
+  <p><strong>Fusion.</strong> The two are blended: <code>D = γ·D_CNN + (1 − γ)·D_analytical</code> with <code>γ = 0.6</code>. Both inputs are computed from the upper bits only.</p>
+
+  <div class="slab">
+    <div class="split">
+      <div>
+        <div class="stage" style="aspect-ratio:4/3" id="distStage">
+          <canvas id="distCanvas" aria-label="3D bar chart of distortion scores for each pixel, coloured by class"></canvas>
+          <div class="nogl">3D view needs WebGL. The counts below still update.</div>
+        </div>
+      </div>
+      <div>
+        <canvas class="mini" id="miniImg" width="22" height="22" aria-label="The small test image: smooth sky, a sharp building, textured grass"></canvas>
+        <p class="hint">The test image: smooth sky on top, a sharp building, textured grass bottom right. Bar height = score.</p>
+      </div>
+    </div>
+    <div class="controls">
+      <label>t1 <input type="range" id="t1" min="0" max="100" value="15"> <b id="t1v">0.15</b></label>
+      <label>t2 <input type="range" id="t2" min="0" max="100" value="35"> <b id="t2v">0.35</b></label>
+    </div>
+    <div class="countrow">
+      <span><i class="sw" style="background:var(--g-soft)"></i>Class 0 smooth: <b id="c0"></b></span>
+      <span><i class="sw" style="background:var(--g)"></i>Class 1 moderate: <b id="c1"></b></span>
+      <span><i class="sw" style="background:var(--b)"></i>Class 2 textured: <b id="c2"></b></span>
+    </div>
+    <p class="hint">Green classes go to EMD (Red–Green pairs). Blue goes to OLSB (Blue channel). Drag to rotate.</p>
+  </div>
+
+  <h3>The three classes</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Class</th><th>Rule</th><th>Area</th><th>Method</th></tr>
+    <tr><td>0</td><td>D &lt; t1</td><td>Smooth</td><td>EMD mod-5 on R–G</td></tr>
+    <tr><td>1</td><td>t1 ≤ D &lt; t2</td><td>Moderate texture</td><td>EMD mod-5 on R–G</td></tr>
+    <tr><td>2</td><td>D ≥ t2</td><td>High texture</td><td>3-bit OLSB on Blue</td></tr>
+  </table></div>
+  <div class="note warn"><p><strong>Determinism trap.</strong> The receiver must compute the exact same map. Tiny floating-point differences (GPU vs CPU, different library versions) can push a pixel across t1 or t2 and break extraction. Run the CNN on CPU in <code>eval()</code> mode, fix the seeds, and round scores to a fixed step (the starter code rounds to 1/1024) before comparing with thresholds.</p></div>
+</section>
+
+<!-- 5 EMD -->
+<section class="page" id="emd" data-title="EMD mod-5">
+  <h2>EMD mod-5</h2>
+  <p class="lede">Hide one digit from 0 to 4 in a pair of pixel values, changing them by as little as possible.</p>
+  <p>Take the Red and Green values of a pixel, <code>p1</code> and <code>p2</code>. Compute <code>f = (p1 + 2·p2) mod 5</code>. That's the digit the pair currently "says". To hide digit <code>d</code>, work out how far off you are, <code>s = (d − f) mod 5</code>, and nudge:</p>
+  <div class="tablewrap"><table>
+    <tr><th>s</th><th>Change</th><th>Why it works</th></tr>
+    <tr><td>0</td><td>nothing</td><td>already correct</td></tr>
+    <tr><td>1</td><td>p1 + 1</td><td>f goes up by 1</td></tr>
+    <tr><td>2</td><td>p2 + 1</td><td>f goes up by 2</td></tr>
+    <tr><td>3</td><td>p2 − 1</td><td>f goes down by 2, which is +3 in mod 5</td></tr>
+    <tr><td>4</td><td>p1 − 1</td><td>f goes down by 1, which is +4 in mod 5</td></tr>
+  </table></div>
+  <p>Every digit is reachable by changing one value by 1. Reading it back is simply computing <code>f</code> again.</p>
+
+  <div class="slab">
+    <h3 style="margin-top:0">Try it</h3>
+    <div class="controls">
+      <label>Red p1 <input type="number" id="p1" min="0" max="255" value="103"></label>
+      <label>Green p2 <input type="number" id="p2" min="0" max="255" value="96"></label>
+    </div>
+    <p class="hint" style="margin:14px 0 6px">Digit to hide</p>
+    <div class="digits" id="digitBtns" role="group" aria-label="Digit to hide"></div>
+    <div class="emdgrid" id="emdGrid" aria-label="Grid of f values around the current pair"></div>
+    <p id="emdOut" aria-live="polite"></p>
+    <p class="hint">Grid: columns are p1, rows are p2, each cell shows f. Dark = current pair, outlined = cells with the right digit, filled green = chosen move. Striped cells would change an upper bit, so they're off-limits.</p>
+  </div>
+
+  <h3>The boundary rule</h3>
+  <p>Try <code>p1 = 103</code> and hide digit 1. The simple rule says p1 + 1 = 104, but 103 is <code>01100111</code> and 104 is <code>01101000</code>. That +1 carries into bit 3, an upper bit, and the receiver's map would change. So the code searches for the smallest move that stays inside the same block of 8 values (the lower 3 bits only). A valid move always exists, because 8 consecutive values cover all 5 remainders.</p>
+  <p>Since values stay inside their block, a pixel can never go below 0 or above 255 either.</p>
+  <div class="note"><p><strong>Capacity:</strong> one base-5 digit holds log₂5 ≈ 2.32 bits. The starter code converts the ciphertext bytes into a long list of base-5 digits and back.</p></div>
+</section>
+
+<!-- 6 OLSB -->
+<section class="page" id="olsb" data-title="3-bit OLSB">
+  <h2>3-bit OLSB</h2>
+  <p class="lede">In busy areas, simply overwrite the lowest 3 bits of the Blue value with 3 data bits.</p>
+  <div class="slab">
+    <label class="hint">Blue value <input type="range" id="olsbVal" min="0" max="255" value="150"></label>
+    <p class="hint" style="margin:12px 0 4px">Data bits to hide (tap to flip)</p>
+    <div class="digits" id="olsbBits"></div>
+    <div class="readout">
+      <span>Before <b id="olBefore"></b></span>
+      <span>After <b id="olAfter"></b></span>
+      <span>Change <b id="olDelta"></b></span>
+    </div>
+    <p class="hint">Formula: <code>new = (b &amp; 0xF8) | data</code>. Extract with <code>new &amp; 7</code>.</p>
+  </div>
+  <p>The change is at most 7, and it's in the channel people perceive least strongly, in areas that are already noisy. It carries 3 full bits per pixel, more than EMD's 2.32 bits per pair.</p>
+  <div class="note"><p><strong>About the "optimal" in OLSB.</strong> Classic optimal LSB adds or subtracts 8 after replacement to bring the value closer to the original. Here that's not allowed, because ±8 changes an upper bit. So this project's OLSB is plain 3-bit replacement, restricted to textured pixels. Say this clearly in the report and viva.</p></div>
+</section>
+
+<!-- 7 RECOVERY -->
+<section class="page" id="recovery" data-title="Recovery and security">
+  <h2>Recovery and security</h2>
+  <p class="lede">Overwriting low bits destroys information. The location map is how the project gets it back.</p>
+
+  <h3>The location map</h3>
+  <p>Before embedding, the sender reads the lower 3 bits of every channel value it will touch: header pixels, the R and G of used EMD pixels, and the B of used OLSB pixels. These are packed in a fixed order and compressed with zlib. After extraction, the receiver writes them back in the same order. Lossy overwriting becomes reversible.</p>
+
+  <h3>Encryption, in plain words</h3>
+  <p><strong>PBKDF2</strong> turns a password into a strong 256-bit key by hashing it many times with a random salt, which makes password guessing slow. <strong>AES-256-GCM</strong> encrypts the secret and the location map together and adds a 16-byte tag. If anyone changes even one bit of the stego image, or uses the wrong password, decryption fails loudly instead of returning garbage.</p>
+
+  <h3>The 64-byte header</h3>
+  <p>The receiver needs a few facts before it can read anything: the salt, the nonce, the ciphertext length and the thresholds. These go in a fixed 64-byte header stored at a known place. In the starter code, that's the Blue low bits of the first 171 pixels. Here is one layout that works:</p>
+  <div class="hdr" aria-label="Header layout">
+    <span style="flex:4">magic</span><span style="flex:2">ver</span><span style="flex:16">salt</span><span style="flex:12">nonce</span><span style="flex:4">ct len</span><span style="flex:4">EMD bytes</span><span style="flex:4">t1, t2</span><span style="flex:18">padding</span>
+  </div>
+  <p class="hint">Bytes: 4 + 2 + 16 + 12 + 4 + 4 + 4 + 18 = 64. Your repo's <code>core/payload.py</code> may use a different order; what matters is that both sides agree.</p>
+
+  <h3>What the receiver gets</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Situation</th><th>Result</th></tr>
+    <tr><td>Correct password, untouched image</td><td>Secret recovered, cover restored with 0 differences</td></tr>
+    <tr><td>Wrong password</td><td>GCM authentication fails, nothing is revealed</td></tr>
+    <tr><td>Image edited or re-saved as JPEG</td><td>Low bits change, authentication fails. RDH assumes a clean channel.</td></tr>
+  </table></div>
+</section>
+
+<!-- 8 CAPACITY -->
+<section class="page" id="capacity" data-title="Capacity reality check">
+  <h2>Capacity reality check</h2>
+  <p class="lede">The recovery map travels inside the same image as the secret. So the key question is whether there is room left for the secret.</p>
+  <p>Count the cost per pixel. An OLSB pixel carries 3 bits, but its map entry stores 3 original bits. An EMD pair carries 2.32 bits, but its map stores 6 original bits (3 for R, 3 for G). zlib can only help if those original low bits have patterns. In real photos, low bits are close to random noise, so they barely compress.</p>
+
+  <div class="slab">
+    <h3 style="margin-top:0">Net capacity calculator</h3>
+    <div class="controls">
+      <label>Image side <select id="capSide"><option>256</option><option selected>512</option><option>1024</option></select></label>
+      <label>EMD pixels used <input type="range" id="capEmd" min="0" max="100" value="40"> <b id="capEmdV"></b></label>
+      <label>OLSB pixels used <input type="range" id="capOl" min="0" max="100" value="20"> <b id="capOlV"></b></label>
+      <label>Map cost per stored value <input type="range" id="capC" min="2" max="36" value="34"> <b id="capCV"></b></label>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div>Carried <div class="big" id="capGross"></div></div>
+      <div>Spent on recovery <div class="big" id="capMap"></div></div>
+      <div>Left for the secret <div class="big" id="capNet"></div></div>
+    </div>
+    <p class="hint">Map cost is in bits per stored 3-bit value after zlib. Measured on a real photo (the scikit-image astronaut): about 3.4 bits, worse than raw. On a smooth synthetic gradient it can drop well below 1.</p>
+  </div>
+
+  <h3>What the starter code showed</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Test image (256×256)</th><th>Result</th></tr>
+    <tr><td>Synthetic gradients + one noisy corner, 39-byte secret</td><td>Exact recovery, PSNR 66.6 dB</td></tr>
+    <tr><td>Real photo, 16-byte secret</td><td>Fails: map needs more room than the image offers</td></tr>
+  </table></div>
+
+  <div class="note warn"><p><strong>Why this matters for the viva.</strong> An examiner who knows RDH may ask: "If you store the original low bits inside the image, what is your net payload on natural photos?" As designed, it's close to zero or negative. It's much better to raise this yourselves with a plan than to be caught by it.</p></div>
+
+  <h3>Ways to make it work (discuss with your guides)</h3>
+  <p><strong>Give class 0 a genuinely reversible method.</strong> Use prediction-error expansion or histogram shifting (the idea behind your MPEH and MCSH baselines) in smooth areas. These create real room without storing original bits, and that room can carry the location map. This also answers "why are class 0 and class 1 different?"</p>
+  <p><strong>Store less.</strong> For EMD, the receiver only needs to know the move made, not all 6 original bits. Moves are small and can be predicted and compressed far better than raw low bits.</p>
+  <p><strong>Report net capacity.</strong> Whatever you choose, report BPP after subtracting the map and header, and test on real photos (for example, the USC-SIPI or Kodak sets), not only synthetic images.</p>
+</section>
+
+<!-- 9 METRICS -->
+<section class="page" id="metrics" data-title="Measuring results">
+  <h2>Measuring results</h2>
+  <p class="lede">No single number proves the method works. Each metric answers a different question.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Metric</th><th>Question it answers</th><th>Good value</th></tr>
+    <tr><td>MSE</td><td>On average, how much did each value change (squared)?</td><td>Close to 0</td></tr>
+    <tr><td>PSNR</td><td>Same as MSE on a log scale, in decibels</td><td>Above 40 dB looks identical</td></tr>
+    <tr><td>SSIM</td><td>Do structures, edges and textures still look the same?</td><td>Close to 1</td></tr>
+    <tr><td>BPP</td><td>How many secret bits per pixel?</td><td>Higher, but report net</td></tr>
+    <tr><td>BER</td><td>What share of extracted bits are wrong?</td><td>Exactly 0</td></tr>
+    <tr><td>Carrier recovery</td><td>What share of pixels came back exactly?</td><td>Exactly 100%</td></tr>
+  </table></div>
+
+  <div class="slab">
+    <h3 style="margin-top:0">PSNR from MSE</h3>
+    <label>MSE <input type="range" id="mse" min="-300" max="200" value="-100"> <b id="mseV"></b></label>
+    <div class="big" id="psnrV" style="margin-top:8px"></div>
+    <p class="hint">PSNR = 10 · log₁₀(255² ÷ MSE). Every 10× smaller MSE adds 10 dB.</p>
+  </div>
+
+  <h3>Security tests, in one line each</h3>
+  <p><strong>Entropy</strong> checks whether randomness in the image changed. <strong>Chi-square</strong> spots the tell-tale pairing that LSB replacement leaves in histograms. <strong>RS analysis</strong> and <strong>sample-pair analysis</strong> estimate how much LSB embedding happened. <strong>Pixel correlation</strong> checks whether neighbours still relate the way natural images do. Encryption protects what the secret says. These tests check whether anyone can tell a secret is there.</p>
+
+  <h3>The six benchmark models</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Model</th><th>Idea</th><th>Stego images</th><th>Reversible</th></tr>
+    <tr><td>MPEH-RDH</td><td>Prediction-error histogram, smooth regions first</td><td>1</td><td>Yes</td></tr>
+    <tr><td>MCSH-RDH</td><td>Histograms synchronised across R, G, B</td><td>1</td><td>Yes</td></tr>
+    <tr><td>CNN-RDH</td><td>CNN predicts the image, hide in the difference</td><td>1</td><td>Yes</td></tr>
+    <tr><td>SRDNN-Stego</td><td>Deep network hides images, with encryption</td><td>multi</td><td>No</td></tr>
+    <tr><td>EMD-OLSB baseline</td><td>EMD + optimised LSB, grayscale</td><td>2</td><td>Yes</td></tr>
+    <tr><td><strong>CNN-DA-EMD-OLSB</strong></td><td>This project</td><td>1</td><td>Yes</td></tr>
+  </table></div>
+  <p><strong>Friedman and Nemenyi tests</strong> tell you whether the differences between models across all test images are real or just luck. <strong>Robustness attacks</strong> (JPEG, noise, cropping, resizing) are expected to break exact recovery. Report them as a separate study, not as a failure.</p>
+</section>
+
+<!-- 10 BUILD -->
+<section class="page" id="build" data-title="Build it step by step">
+  <h2>Build it step by step</h2>
+  <p class="lede">Build the smallest working version first, prove it's exact, then add the CNN. The full tested file is <a href="starter/rdh_starter.py">starter/rdh_starter.py</a>.</p>
+
+  <h3>Step 0 · Set up</h3>
+<pre><code>python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install numpy pillow cryptography
+pip install torch                # only needed from step 6</code></pre>
+
+  <h3>Step 1 · Load an image and split the bits</h3>
+<pre><code>import numpy as np
+from PIL import Image
+
+img = np.array(Image.open("cover.png").convert("RGB"), dtype=np.uint8)
+upper = img &amp; 0xF8     # never changes
+lower = img &amp; 0x07     # where data goes
+print(img.shape, upper[0, 0], lower[0, 0])</code></pre>
+  <ul class="check"><li>Use PNG, never JPEG. JPEG changes low bits when saving.</li></ul>
+
+  <h3>Step 2 · EMD with the boundary rule</h3>
+<pre><code>def f(p1, p2):
+    return (p1 + 2 * p2) % 5
+
+def emd_embed(p1, p2, d):
+    need = (d - f(p1, p2)) % 5
+    if need == 0:
+        return p1, p2
+    best = None
+    for a in range(-(p1 &amp; 7), 8 - (p1 &amp; 7)):      # stay in p1's block of 8
+        for b in range(-(p2 &amp; 7), 8 - (p2 &amp; 7)):  # stay in p2's block of 8
+            if (a + 2 * b) % 5 == need:
+                cost = a * a + b * b
+                if best is None or cost &lt; best[0]:
+                    best = (cost, a, b)
+    _, a, b = best
+    return p1 + a, p2 + b
+
+# test every pair and digit once: 327,680 cases
+for p1 in range(256):
+    for p2 in range(256):
+        for d in range(5):
+            q1, q2 = emd_embed(p1, p2, d)
+            assert f(q1, q2) == d
+            assert q1 &amp; 0xF8 == p1 &amp; 0xF8 and q2 &amp; 0xF8 == p2 &amp; 0xF8
+print("EMD ok")</code></pre>
+
+  <h3>Step 3 · OLSB</h3>
+<pre><code>def olsb_embed(b, three_bits):
+    return (b &amp; 0xF8) | three_bits
+
+def olsb_extract(b):
+    return b &amp; 0x07</code></pre>
+
+  <h3>Step 4 · Analytical distortion map</h3>
+<pre><code>SX = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], float)
+SY = SX.T
+BOX = np.ones((3, 3)) / 9
+
+def conv3(x, k):
+    p = np.pad(x, 1, mode="edge")
+    out = np.zeros_like(x)
+    for dy in range(3):
+        for dx in range(3):
+            out += k[dy, dx] * p[dy:dy + x.shape[0], dx:dx + x.shape[1]]
+    return out
+
+def norm01(x):
+    return (x - x.min()) / (x.max() - x.min() + 1e-8)
+
+def analytical_map(upper):
+    maps = []
+    for c in range(3):
+        ch = upper[:, :, c].astype(float)
+        grad = np.hypot(conv3(ch, SX), conv3(ch, SY))
+        var = conv3(ch * ch, BOX) - conv3(ch, BOX) ** 2
+        maps.append(0.5 * norm01(grad) + 0.5 * norm01(var))
+    return np.stack(maps, -1)
+
+score = np.round(analytical_map(img &amp; 0xF8).mean(axis=2) * 1024) / 1024
+classes = np.digitize(score, [0.15, 0.35])   # 0, 1, 2</code></pre>
+  <ul class="check"><li>Check: <code>classes</code> computed from the stego image equals <code>classes</code> from the cover.</li></ul>
+
+  <h3>Step 5 · Encryption</h3>
+<pre><code>import os
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+def derive_key(password, salt):
+    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,
+                     salt=salt, iterations=200_000)
+    return kdf.derive(password.encode())
+
+salt, nonce = os.urandom(16), os.urandom(12)
+ct = AESGCM(derive_key("pw", salt)).encrypt(nonce, b"secret + map", None)
+pt = AESGCM(derive_key("pw", salt)).decrypt(nonce, ct, None)  # raises if wrong</code></pre>
+
+  <h3>Step 6 · The DistortionCNN (plug-in)</h3>
+<pre><code>import torch, torch.nn as nn
+
+class DistortionCNN(nn.Module):
+    """Three branches at 3x3, 5x5 and 7x7 scale → one map per channel."""
+    def __init__(self):
+        super().__init__()
+        self.b3 = nn.Conv2d(3, 8, 3, padding=1)
+        self.b5 = nn.Conv2d(3, 8, 5, padding=2)
+        self.b7 = nn.Conv2d(3, 8, 7, padding=3)
+        self.head = nn.Sequential(nn.ReLU(), nn.Conv2d(24, 16, 3, padding=1),
+                                  nn.ReLU(), nn.Conv2d(16, 3, 1), nn.Sigmoid())
+    def forward(self, x):
+        return self.head(torch.cat([self.b3(x), self.b5(x), self.b7(x)], 1))
+
+torch.manual_seed(0)
+torch.use_deterministic_algorithms(True)
+model = DistortionCNN().eval()        # CPU only, same weights on both sides
+x = torch.from_numpy((img &amp; 0xF8) / 255.0).permute(2, 0, 1)[None].float()
+with torch.no_grad():
+    cnn_map = model(x)[0].permute(1, 2, 0).numpy()
+# pass cnn_map into distortion_score(img, cnn_map) in the starter file</code></pre>
+  <p class="hint">This is a teaching version. Your repo's <code>cnn/distortion_cnn.py</code> and <code>cnn/train_cnn.py</code> define the real architecture and training loss.</p>
+
+  <h3>Step 7 · Put it together and prove it</h3>
+<pre><code>from rdh_starter import embed, extract, psnr, upper_bits
+
+stego = embed(img, b"my secret", "pmec-2027")
+secret, restored = extract(stego, "pmec-2027")
+
+assert secret == b"my secret"
+assert np.array_equal(upper_bits(img), upper_bits(stego))
+assert np.array_equal(restored, img)           # 100% carrier recovery
+print(f"PSNR {psnr(img, stego):.2f} dB")
+Image.fromarray(stego).save("stego.png")</code></pre>
+  <ul class="check">
+    <li>Run on the built-in demo first: <code>python rdh_starter.py</code></li>
+    <li>Then try real photos and read chapter 8 before you're surprised.</li>
+    <li>Then run the benchmark: 5 images × 6 payload levels × 6 models.</li>
+  </ul>
+</section>
+
+<!-- 11 VIVA -->
+<section class="page" id="viva" data-title="Viva prep">
+  <h2>Viva prep</h2>
+  <p class="lede">Questions an examiner is likely to ask, with short answers you should be able to say in your own words.</p>
+  <details><summary>Why use the upper bits for the distortion map?</summary><p>Embedding changes only the lower 3 bits, so the upper 5 are identical in cover and stego. The receiver computes the same map and the same classes without any side information.</p></details>
+  <details><summary>Why not let the CNN reconstruct the image?</summary><p>Neural networks are approximate. RDH needs bit-exact recovery, so the CNN only scores pixels. Exact recovery comes from the saved low bits.</p></details>
+  <details><summary>What happens when EMD needs +1 on a value ending in 111?</summary><p>That would change an upper bit. The boundary rule picks a different, equally valid move inside the same 8-value block. A valid move always exists.</p></details>
+  <details><summary>Why EMD in smooth areas and OLSB in textured ones?</summary><p>EMD changes a value by about 1, so it's safe where changes would show. OLSB changes up to 7 but carries more bits, which is acceptable where texture hides it.</p></details>
+  <details><summary>How is the payload protected?</summary><p>PBKDF2 derives a 256-bit key from the password. AES-256-GCM encrypts the secret and location map and adds an authentication tag that detects tampering or a wrong key.</p></details>
+  <details><summary>What's your net capacity after the location map?</summary><p>Prepare this answer carefully. See chapter 8.</p></details>
+  <details><summary>How do you make the CNN deterministic?</summary><p>Fixed seeds, eval mode, CPU inference, deterministic algorithms, and scores quantised before thresholding.</p></details>
+  <details><summary>Why does JPEG break it?</summary><p>JPEG compression rewrites low bits. RDH assumes a lossless channel. Robustness attacks are reported as a separate study.</p></details>
+
+  <h3>Fixes for the report before submission</h3>
+  <ul>
+    <li>Section numbers jump from 3.2 to 3.5. Renumber, and make 3.5.9 a proper heading.</li>
+    <li>Section 3.1 says the analytical map is Sobel plus local variance, but the 3.5.2 formula only shows D_Sobel. Use one definition everywhere.</li>
+    <li>Explain how class 0 and class 1 differ, since both use EMD.</li>
+    <li>Give values for t1 and t2 and how they were chosen.</li>
+    <li>Describe the boundary-safe EMD rule in a paragraph.</li>
+    <li>Explain the chicken-and-egg of the location map (its size depends on how many pixels are used), and report net BPP.</li>
+    <li>Table 2 lists SRDNN-Stego with 1 stego image, while 2.3.4 calls it multi-image.</li>
+    <li>Say that OLSB here is plain 3-bit replacement, because ±8 correction would change upper bits.</li>
+  </ul>
+
+  <h3>Glossary</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Word</th><th>Meaning</th></tr>
+    <tr><td>Cover image</td><td>The original image before hiding anything</td></tr>
+    <tr><td>Stego image</td><td>The image after hiding data</td></tr>
+    <tr><td>Payload</td><td>The data being hidden</td></tr>
+    <tr><td>Bitplane</td><td>One bit position taken across all pixels</td></tr>
+    <tr><td>Location map</td><td>Saved original low bits used to restore the cover</td></tr>
+    <tr><td>Nonce</td><td>A one-time random number used by AES-GCM</td></tr>
+    <tr><td>Salt</td><td>Random bytes that make each password-derived key unique</td></tr>
+    <tr><td>Steganalysis</td><td>Techniques for detecting hidden data</td></tr>
+  </table></div>
+</section>
+
+<div class="pager" id="pager"></div>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+var CH=[["home","Start here"],["idea","The big idea"],["bits","Pixels and bits"],["pipeline","The whole pipeline"],["distortion","The distortion map"],["emd","EMD mod-5"],["olsb","3-bit OLSB"],["recovery","Recovery and security"],["capacity","Capacity reality check"],["metrics","Measuring results"],["build","Build it step by step"],["viva","Viva prep"]];
+var store={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+var done=store.get("bpl-done",[]);
+var root=document.documentElement;
+function css(n){return getComputedStyle(root).getPropertyValue(n).trim()}
+
+/* theme */
+var theme=store.get("bpl-theme",null);if(theme)root.setAttribute("data-theme",theme);
+document.getElementById("themeBtn").addEventListener("click",function(){
+  var dark=css("--bg").toLowerCase()==="#0f1726";
+  var next=dark?"light":"dark";root.setAttribute("data-theme",next);store.set("bpl-theme",next);
+  window.dispatchEvent(new Event("themechange"));
+});
+
+/* nav */
+var list=document.getElementById("chapterList");
+CH.forEach(function(c,i){var li=document.createElement("li");li.innerHTML='<a href="#'+c[0]+'" data-id="'+c[0]+'"><span class="n">'+(i===0?"·":i)+'</span><span>'+c[1]+'</span></a>';list.appendChild(li)});
+var rail=document.getElementById("rail"),menuBtn=document.getElementById("menuBtn");
+menuBtn.addEventListener("click",function(){var o=rail.classList.toggle("open");menuBtn.setAttribute("aria-expanded",o)});
+function paintProgress(){
+  document.querySelectorAll(".rail a").forEach(function(a){a.classList.toggle("done",done.indexOf(a.dataset.id)>-1)});
+  var n=done.filter(function(d){return d!=="home"}).length;
+  document.getElementById("progText").textContent=n+" of 11 chapters done";
+  document.getElementById("progBar").style.width=(n/11*100)+"%";
+}
+var inits={};
+function show(id){
+  if(!document.getElementById(id)||!document.getElementById(id).classList.contains("page"))id="home";
+  document.querySelectorAll(".page").forEach(function(p){p.classList.toggle("on",p.id===id)});
+  document.querySelectorAll(".rail a").forEach(function(a){if(a.dataset.id===id)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  var i=CH.findIndex(function(c){return c[0]===id});
+  var pg=document.getElementById("pager"),h="";
+  h+=i>0?'<a class="btn ghost" href="#'+CH[i-1][0]+'">Back: '+CH[i-1][1]+'</a>':"<span></span>";
+  if(id!=="home")h+='<label class="done-toggle"><input type="checkbox" id="doneBox" '+(done.indexOf(id)>-1?"checked":"")+'> I understand this chapter</label>';
+  h+=i<CH.length-1?'<a class="btn" href="#'+CH[i+1][0]+'">Next: '+CH[i+1][1]+'</a>':"";
+  pg.innerHTML=h;
+  var db=document.getElementById("doneBox");
+  if(db)db.addEventListener("change",function(){if(db.checked){if(done.indexOf(id)<0)done.push(id)}else done=done.filter(function(d){return d!==id});store.set("bpl-done",done);paintProgress()});
+  document.title=CH[i][1]+" · Bitplane Lab";
+  rail.classList.remove("open");menuBtn.setAttribute("aria-expanded","false");
+  window.scrollTo(0,0);
+  if(inits[id]&&!inits[id].ran){inits[id].ran=true;inits[id]()}
+  window.dispatchEvent(new CustomEvent("pagechange",{detail:id}));
+}
+window.addEventListener("hashchange",function(){show(location.hash.slice(1)||"home")});
+
+/* steps */
+document.querySelectorAll(".step").forEach(function(b){b.addEventListener("click",function(){b.setAttribute("aria-expanded",b.getAttribute("aria-expanded")!=="true")})});
+
+/* copy buttons */
+document.querySelectorAll("pre").forEach(function(pre){var b=document.createElement("button");b.className="copy";b.textContent="Copy";b.addEventListener("click",function(){var t=pre.querySelector("code").innerText;try{navigator.clipboard.writeText(t).then(function(){b.textContent="Copied"},function(){b.textContent="Select and copy"})}catch(e){b.textContent="Select and copy"}setTimeout(function(){b.textContent="Copy"},1600)});pre.appendChild(b)});
+
+/* bits explorer */
+(function(){
+  var rgb=[173,96,210],ch=0,row=document.getElementById("bitRow"),sl=document.getElementById("chanVal");
+  function paint(){
+    var v=rgb[ch];row.innerHTML="";
+    for(var k=7;k>=0;k--){(function(k){var on=(v>>k)&1,b=document.createElement("button");b.className="bit "+(k>2?"up":"lo")+(on?" one":"");b.textContent=on;b.setAttribute("aria-label","Bit "+k+", value "+on+". Tap to flip.");b.addEventListener("click",function(){rgb[ch]^=(1<<k);sl.value=rgb[ch];paint()});row.appendChild(b)})(k)}
+    document.getElementById("rdVal").textContent=v;
+    document.getElementById("rdUp").textContent=(v&0xF8);
+    document.getElementById("rdLo").textContent=(v&7);
+    document.getElementById("swatch").style.background="rgb("+rgb.join(",")+")";
+  }
+  sl.addEventListener("input",function(){rgb[ch]=+sl.value;paint()});
+  document.querySelectorAll(".chanpick button").forEach(function(b){b.addEventListener("click",function(){ch=+b.dataset.ch;document.querySelectorAll(".chanpick button").forEach(function(x){x.setAttribute("aria-pressed",x===b)});sl.value=rgb[ch];paint()})});
+  paint();
+})();
+
+/* EMD */
+function f5(a,b){return ((a+2*b)%5+5)%5}
+function emdEmbed(p1,p2,d){var need=((d-f5(p1,p2))%5+5)%5;if(!need)return[p1,p2];var best=null;
+  for(var a=-(p1&7);a<8-(p1&7);a++)for(var b=-(p2&7);b<8-(p2&7);b++)if(((a+2*b)%5+5)%5===need){var c=a*a+b*b;if(!best||c<best[0])best=[c,a,b]}
+  return[p1+best[1],p2+best[2]]}
+(function(){
+  var d=1,db=document.getElementById("digitBtns");
+  for(var i=0;i<5;i++){(function(i){var b=document.createElement("button");b.textContent=i;b.setAttribute("aria-pressed",i===d);b.addEventListener("click",function(){d=i;db.querySelectorAll("button").forEach(function(x,j){x.setAttribute("aria-pressed",j===i)});paint()});db.appendChild(b)})(i)}
+  var i1=document.getElementById("p1"),i2=document.getElementById("p2");
+  function clamp(v){v=Math.round(+v);return isNaN(v)?0:Math.max(0,Math.min(255,v))}
+  function paint(){
+    var p1=clamp(i1.value),p2=clamp(i2.value),r=emdEmbed(p1,p2,d),g=document.getElementById("emdGrid"),h='<div class="hd">p2 \\ p1</div>';
+    for(var x=-2;x<=2;x++)h+='<div class="hd">'+(p1+x)+'</div>';
+    for(var y=-2;y<=2;y++){h+='<div class="hd">'+(p2+y)+'</div>';
+      for(x=-2;x<=2;x++){var a=p1+x,b=p2+y,out=a<0||b<0||a>255||b>255||(a&0xF8)!==(p1&0xF8)||(b&0xF8)!==(p2&0xF8),cls="cell";
+        if(out)cls+=" out";else if(f5(a,b)===d)cls+=" target";
+        if(x===0&&y===0)cls+=" now";if(a===r[0]&&b===r[1]&&!(x===0&&y===0))cls+=" pick";
+        h+='<div class="'+cls+'">'+((a<0||b<0||a>255||b>255)?"":f5(a,b))+'</div>'}}
+    g.innerHTML=h;
+    var f0=f5(p1,p2),s=((d-f0)%5+5)%5;
+    document.getElementById("emdOut").innerHTML="f("+p1+", "+p2+") = "+f0+". Need s = "+s+". New pair <b>("+r[0]+", "+r[1]+")</b>, which reads f = "+f5(r[0],r[1])+". Upper bits unchanged: "+(((r[0]&0xF8)===(p1&0xF8)&&(r[1]&0xF8)===(p2&0xF8))?"yes":"no")+".";
+  }
+  i1.addEventListener("input",paint);i2.addEventListener("input",paint);paint();
+})();
+
+/* OLSB */
+(function(){
+  var bits=[1,0,1],box=document.getElementById("olsbBits"),sl=document.getElementById("olsbVal");
+  function bin(v){return ("00000000"+v.toString(2)).slice(-8)}
+  function paint(){
+    box.innerHTML="";bits.forEach(function(v,i){var b=document.createElement("button");b.textContent=v;b.setAttribute("aria-pressed",!!v);b.setAttribute("aria-label","Data bit "+(i+1));b.addEventListener("click",function(){bits[i]^=1;paint()});box.appendChild(b)});
+    var o=+sl.value,data=bits[0]*4+bits[1]*2+bits[2],n=(o&0xF8)|data;
+    document.getElementById("olBefore").textContent=o+" = "+bin(o);
+    document.getElementById("olAfter").textContent=n+" = "+bin(n);
+    document.getElementById("olDelta").textContent=(n-o>=0?"+":"")+(n-o);
+  }
+  sl.addEventListener("input",paint);paint();
+})();
+
+/* capacity */
+(function(){
+  var ids=["capSide","capEmd","capOl","capC"];
+  function fmt(b){var B=b/8;return Math.abs(B)>=1024?(B/1024).toFixed(1)+" KB":Math.round(B)+" B"}
+  function paint(){
+    var side=+document.getElementById("capSide").value,N=side*side,e=+document.getElementById("capEmd").value/100,o=+document.getElementById("capOl").value/100,c=+document.getElementById("capC").value/10;
+    if(e+o>1){o=1-e;document.getElementById("capOl").value=Math.round(o*100)}
+    var ne=Math.floor(N*e),no=Math.floor(N*o);
+    var gross=ne*Math.log2(5)+no*3,map=(ne*2+no+171)*c,over=64*8+16*8+96,net=gross-map-over;
+    document.getElementById("capEmdV").textContent=Math.round(e*100)+"%";
+    document.getElementById("capOlV").textContent=Math.round(o*100)+"%";
+    document.getElementById("capCV").textContent=c.toFixed(1);
+    document.getElementById("capGross").textContent=fmt(gross);
+    document.getElementById("capMap").textContent=fmt(map+over);
+    var el=document.getElementById("capNet");el.textContent=(net<0?"−":"")+fmt(Math.abs(net))+" ("+(net/N).toFixed(3)+" bpp)";el.className="big "+(net<0?"neg":"pos");
+  }
+  ids.forEach(function(i){document.getElementById(i).addEventListener("input",paint)});paint();
+})();
+
+/* PSNR */
+(function(){var s=document.getElementById("mse");function p(){var m=Math.pow(10,+s.value/100);document.getElementById("mseV").textContent=m<0.1?m.toFixed(4):m.toFixed(2);document.getElementById("psnrV").textContent=(10*Math.log10(65025/m)).toFixed(1)+" dB"}s.addEventListener("input",p);p()})();
+
+/* ---------- 3D ---------- */
+var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+var hasGL=!!window.THREE&&(function(){try{var c=document.createElement("canvas");return !!(c.getContext("webgl")||c.getContext("experimental-webgl"))}catch(e){return false}})();
+function noGL(stageId){var s=document.getElementById(stageId);s.querySelector("canvas").style.display="none";s.querySelector(".nogl").style.display="block"}
+function col(v){return new THREE.Color(v)}
+function dragRotate(canvas,obj,onMove){
+  var down=false,lx=0,ly=0;
+  canvas.addEventListener("pointerdown",function(e){down=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture(e.pointerId);canvas.style.cursor="grabbing"});
+  canvas.addEventListener("pointermove",function(e){if(!down)return;obj.rotation.y+=(e.clientX-lx)*0.01;obj.rotation.x=Math.max(-0.5,Math.min(0.9,obj.rotation.x+(e.clientY-ly)*0.006));lx=e.clientX;ly=e.clientY;onMove&&onMove()});
+  canvas.addEventListener("pointerup",function(){down=false;canvas.style.cursor="grab"});
+  canvas.addEventListener("pointercancel",function(){down=false});
+}
+function makeRenderer(canvas){var r=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio,2));return r}
+function fit(r,cam,canvas){var w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;if(canvas.width!==Math.floor(w*r.getPixelRatio())||canvas.height!==Math.floor(h*r.getPixelRatio())){r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}}
+
+/* synthetic image shared by both scenes */
+function synthImage(n){var a=[],seed=42;function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647}
+  for(var y=0;y<n;y++){a[y]=[];for(var x=0;x<n;x++){var v;
+    if(y<n*0.42)v=150+y*3+x*0.8;
+    else if(x>=n*0.18&&x<n*0.45)v=58+(y%4===0?30:0);
+    else if(x>=n*0.55&&y>=n*0.6)v=95+rnd()*120;
+    else v=120+Math.sin(x*0.7)*18+y;
+    a[y][x]=Math.max(0,Math.min(255,Math.round(v)))}}return a}
+
+/* hero */
+inits.home=function(){
+  if(!hasGL)return noGL("heroStage");
+  var canvas=document.getElementById("heroCanvas"),r=makeRenderer(canvas),scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(34,1,0.1,100);
+  cam.position.set(7.5,6.2,9.5);cam.lookAt(0,1.9,0);
+  scene.add(new THREE.AmbientLight(0xffffff,0.7));var dl=new THREE.DirectionalLight(0xffffff,0.8);dl.position.set(5,10,6);scene.add(dl);
+  var grp=new THREE.Group();grp.rotation.set(0.1,-0.5,0);scene.add(grp);
+  var N=24,img=synthImage(N),slabs=[],mats=[];
+  function tex(k,on,off){var c=document.createElement("canvas");c.width=c.height=N;var x=c.getContext("2d");
+    for(var y=0;y<N;y++)for(var i=0;i<N;i++){x.fillStyle=((img[y][i]>>k)&1)?on:off;x.fillRect(i,y,1,1)}
+    var t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.minFilter=THREE.NearestFilter;return t}
+  function build(){
+    slabs.forEach(function(s){grp.remove(s);s.geometry.dispose()});slabs=[];
+    var up=css("--upper"),am=css("--amber"),off=css("--surface"),side=css("--slab");
+    for(var k=7;k>=0;k--){
+      var on=k>2?up:am,top=new THREE.MeshStandardMaterial({map:tex(k,on,off),roughness:0.8}),sm=new THREE.MeshStandardMaterial({color:col(on),roughness:0.6});
+      var m=new THREE.Mesh(new THREE.BoxGeometry(4,0.1,4),[sm,sm,top,sm,sm,sm]);m.userData.k=k;grp.add(m);slabs.push(m)}
+    place();
+  }
+  var gapEl=document.getElementById("gap");
+  function place(){var g=0.14+(+gapEl.value/100)*0.55;slabs.forEach(function(s){s.position.y=s.userData.k*g});drops.forEach(function(d){d.userData.ty=d.userData.k*g+0.1})}
+  var drops=[],dropGeo=new THREE.BoxGeometry(0.16,0.16,0.16),dropMat=new THREE.MeshStandardMaterial({color:col(css("--amber")),emissive:col(css("--amber")),emissiveIntensity:0.35});
+  for(var i=0;i<14;i++){var d=new THREE.Mesh(dropGeo,dropMat);d.userData={k:i%3,t:Math.random(),x:(Math.random()-0.5)*3.4,z:(Math.random()-0.5)*3.4};grp.add(d);drops.push(d)}
+  build();gapEl.addEventListener("input",place);
+  var rain=document.getElementById("rain");
+  window.addEventListener("themechange",function(){build();dropMat.color=col(css("--amber"));dropMat.emissive=col(css("--amber"))});
+  dragRotate(canvas,grp);
+  var visible=true,active=true;
+  new IntersectionObserver(function(e){visible=e[0].isIntersecting}).observe(canvas);
+  window.addEventListener("pagechange",function(e){active=e.detail==="home";if(active)loop()});
+  var last=performance.now(),running=false;
+  function loop(){if(running)return;running=true;requestAnimationFrame(frame)}
+  function frame(now){
+    if(!active){running=false;return}
+    var dt=Math.min(0.05,(now-last)/1000);last=now;
+    if(visible){
+      fit(r,cam,canvas);
+      drops.forEach(function(d){d.visible=rain.checked&&!reduced;if(!d.visible)return;var u=d.userData;u.t+=dt*0.35;if(u.t>1){u.t=0;u.x=(Math.random()-0.5)*3.4;u.z=(Math.random()-0.5)*3.4;u.k=Math.floor(Math.random()*3)}
+        var p=u.t<0.6?u.t/0.6:1;d.position.set(-5.5+(u.x+5.5)*p,u.ty+(1-p)*1.2,u.z);d.scale.setScalar(u.t>0.85?Math.max(0.01,(1-u.t)/0.15):1)});
+      if(!reduced&&!rain.dataset.hold)grp.rotation.y+=dt*0.12;
+      r.render(scene,cam)}
+    requestAnimationFrame(frame)}
+  loop();
+};
+
+/* distortion heightmap */
+var distScores=null;
+function computeScores(){
+  var N=22,img=synthImage(N),up=img.map(function(r){return r.map(function(v){return v&0xF8})});
+  function at(y,x){y=Math.max(0,Math.min(N-1,y));x=Math.max(0,Math.min(N-1,x));return up[y][x]}
+  var G=[],V=[],gmax=0,gmin=1e9,vmax=0,vmin=1e9;
+  for(var y=0;y<N;y++){G[y]=[];V[y]=[];for(var x=0;x<N;x++){
+    var gx=-at(y-1,x-1)-2*at(y,x-1)-at(y+1,x-1)+at(y-1,x+1)+2*at(y,x+1)+at(y+1,x+1);
+    var gy=-at(y-1,x-1)-2*at(y-1,x)-at(y-1,x+1)+at(y+1,x-1)+2*at(y+1,x)+at(y+1,x+1);
+    var s=0,s2=0;for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){var v=at(y+dy,x+dx);s+=v;s2+=v*v}
+    var g=Math.hypot(gx,gy),va=s2/9-(s/9)*(s/9);G[y][x]=g;V[y][x]=va;
+    gmax=Math.max(gmax,g);gmin=Math.min(gmin,g);vmax=Math.max(vmax,va);vmin=Math.min(vmin,va)}}
+  var S=[];for(y=0;y<N;y++){S[y]=[];for(x=0;x<N;x++)S[y][x]=Math.round((0.5*(G[y][x]-gmin)/(gmax-gmin+1e-8)+0.5*(V[y][x]-vmin)/(vmax-vmin+1e-8))*1024)/1024}
+  var mini=document.getElementById("miniImg").getContext("2d");
+  for(y=0;y<N;y++)for(x=0;x<N;x++){var c=img[y][x];mini.fillStyle="rgb("+Math.round(c*0.75)+","+Math.round(c*0.85)+","+c+")";mini.fillRect(x,y,1,1)}
+  return {N:N,S:S};
+}
+function thresholds(){var a=+document.getElementById("t1").value/100,b=+document.getElementById("t2").value/100;if(b<a){b=a;document.getElementById("t2").value=Math.round(b*100)}document.getElementById("t1v").textContent=a.toFixed(2);document.getElementById("t2v").textContent=b.toFixed(2);return[a,b]}
+function countClasses(){var t=thresholds(),c=[0,0,0];distScores.S.forEach(function(r){r.forEach(function(s){c[s<t[0]?0:s<t[1]?1:2]++})});
+  var tot=distScores.N*distScores.N;["c0","c1","c2"].forEach(function(id,i){document.getElementById(id).textContent=c[i]+" px ("+Math.round(c[i]/tot*100)+"%)"})}
+inits.distortion=function(){
+  distScores=computeScores();countClasses();
+  var t1=document.getElementById("t1"),t2=document.getElementById("t2");
+  if(!hasGL){noGL("distStage");t1.addEventListener("input",countClasses);t2.addEventListener("input",countClasses);return}
+  var canvas=document.getElementById("distCanvas"),r=makeRenderer(canvas),scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(35,4/3,0.1,200);
+  cam.position.set(0,19,26);cam.lookAt(0,0,0);
+  scene.add(new THREE.AmbientLight(0xffffff,0.65));var dl=new THREE.DirectionalLight(0xffffff,0.85);dl.position.set(8,20,10);scene.add(dl);
+  var grp=new THREE.Group();grp.rotation.set(0.15,0.5,0);scene.add(grp);
+  var N=distScores.N,mesh=new THREE.InstancedMesh(new THREE.BoxGeometry(0.86,1,0.86),new THREE.MeshStandardMaterial({roughness:0.7}),N*N),m=new THREE.Matrix4();
+  grp.add(mesh);
+  function paint(){var t=thresholds(),cs=[col(css("--g-soft")),col(css("--g")),col(css("--b"))],i=0;
+    for(var y=0;y<N;y++)for(var x=0;x<N;x++){var s=distScores.S[y][x],h=0.15+s*4.2;
+      m.makeScale(1,h,1);m.setPosition(x-N/2+0.5,h/2,y-N/2+0.5);mesh.setMatrixAt(i,m);mesh.setColorAt(i,cs[s<t[0]?0:s<t[1]?1:2]);i++}
+    mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;countClasses();draw()}
+  function draw(){fit(r,cam,canvas);r.render(scene,cam)}
+  t1.addEventListener("input",paint);t2.addEventListener("input",paint);
+  window.addEventListener("themechange",paint);window.addEventListener("resize",draw);
+  window.addEventListener("pagechange",function(e){if(e.detail==="distortion")requestAnimationFrame(draw)});
+  dragRotate(canvas,grp,draw);paint();
+};
+
+paintProgress();
+show(location.hash.slice(1)||"home");
+})();
+</script>
+</body>
+</html>
